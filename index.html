@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rippah - 2026 Masters Pool</title>
 <style>
@@ -138,7 +141,7 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 </head>
 <body>
 <div class="hdr">
-<div class="hdr-top"><div class="hdr-mark">Masters Tournament<span>Augusta National Golf Club</span></div><div class="hdr-sponsor"><div class="hdr-by">Presented by</div><svg class="dubra-logo" viewBox="0 0 100 28" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y=".5" width="99" height="27" rx="3" fill="rgba(255,255,255,.06)" stroke="rgba(200,169,81,.3)" stroke-width=".5"/><text x="50" y="12" text-anchor="middle" font-family="DM Serif Display,serif" font-size="12" fill="#c8a951" letter-spacing="3" dominant-baseline="middle">DUBRA</text><text x="50" y="23" text-anchor="middle" font-family="Source Sans 3,sans-serif" font-size="5.5" fill="rgba(200,169,81,.5)" letter-spacing="2.5" dominant-baseline="middle">VODKA</text></svg></div></div>
+<div class="hdr-top"><div class="hdr-mark">Masters Tournament<span>Augusta National Golf Club</span></div><div class="hdr-sponsor"><div class="hdr-by">Presented by</div><svg class="dubra-logo" viewBox="0 0 100 28" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y=".5" width="99" height="27" rx="3" fill="rgba(255,255,255,.15)" stroke="rgba(200,169,81,.3)" stroke-width=".5"/><text x="50" y="12" text-anchor="middle" font-family="DM Serif Display,serif" font-size="12" fill="#c8a951" letter-spacing="3" dominant-baseline="middle">DUBRA</text><text x="50" y="23" text-anchor="middle" font-family="Source Sans 3,sans-serif" font-size="5.5" fill="rgba(200,169,81,.5)" letter-spacing="2.5" dominant-baseline="middle">VODKA</text></svg></div></div>
 <div class="leaders-bar">LEADERS</div>
 <div class="hdr-sub">RIPPAH - 2026 Masters Pool</div>
 <div class="hdr-rule">Best 3 of 5 · Missed cuts card 80 for Sat & Sun</div>
@@ -220,7 +223,7 @@ var ODDS={
 };
 var sc={},ath={},prevRank={},hbh={},ddist={},sbd={thu:{},fri:{},sat:{},sun:{}};
 // Augusta hole positions for SVG map (x,y out of 100)
-var HPOS=[[82,90],[75,72],[70,55],[62,42],[55,30],[48,18],[38,12],[28,20],[20,35],[18,50],[22,62],[30,72],[38,65],[45,55],[52,45],[58,35],[65,48],[75,65]];
+var HPOS=[[54,18],[54,48],[34,38],[18,37],[22,62],[26,48],[56,54],[52,24],[78,34],[80,64],[66,84],[57,89],[37,71],[72,68],[37,58],[29,53],[65,59],[79,37]];
 
 function showTab(t){["board","map","draft","props","rules"].forEach(function(x){document.getElementById("tab-"+x).style.display=x===t?"":"none";document.getElementById("btn-"+x).classList.toggle("active",x===t)});if(t==="draft")renderDraft();if(t==="props")renderProps();if(t==="map")renderMap()}
 
@@ -360,7 +363,10 @@ function mGolfer(g,counting,num){
   if(currentHole>0){
     mapH='<div class="cmap"><div class="cmap-label">On Course - Hole '+currentHole+'</div><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">';
     // Amen Corner zone
-    mapH+='<rect x="18" y="55" width="25" height="22" rx="3" class="amen-zone"/><text x="30" y="60" fill="#c8a951" font-size="2.5" text-anchor="middle" font-family="Source Sans 3" opacity=".5">AMEN CORNER</text>';
+    mapH+='<rect x="106" y="214" width="25" height="22" rx="3" class="amen-zone"/><text x="30" y="60" fill="#c8a951" font-size="2.5" text-anchor="middle" font-family="Source Sans 3" opacity=".5">AMEN CORNER</text>';
+
+
+
     // Draw paths between holes
     for(var j=0;j<17;j++){mapH+='<line x1="'+HPOS[j][0]+'" y1="'+HPOS[j][1]+'" x2="'+HPOS[j+1][0]+'" y2="'+HPOS[j+1][1]+'" class="hole-path"/>'}
     // Draw holes
@@ -423,31 +429,30 @@ function renderProps(){
 // LIVE MAP - Augusta National course layout
 // Green positions [x,y], tee positions [x,y], fairway curve control point [cx,cy]
 var HOLES_MAP=[
-  {n:1,nm:"Tea Olive",p:4,y:445,tee:[152,28],grn:[142,62],cp:[148,45]},
-  {n:2,nm:"Pink Dogwood",p:5,y:575,tee:[140,67],grn:[118,112],cp:[132,90]},
-  {n:3,nm:"Flowering Peach",p:4,y:350,tee:[115,117],grn:[105,138],cp:[112,128]},
-  {n:4,nm:"Flowering Crab Apple",p:3,y:240,tee:[102,142],grn:[78,146],cp:[90,140]},
-  {n:5,nm:"Magnolia",p:4,y:495,tee:[75,150],grn:[42,176],cp:[55,168]},
-  {n:6,nm:"Juniper",p:3,y:180,tee:[40,180],grn:[38,155],cp:[36,168]},
-  {n:7,nm:"Pampas",p:4,y:450,tee:[36,152],grn:[32,125],cp:[28,138]},
-  {n:8,nm:"Yellow Jasmine",p:5,y:570,tee:[30,122],grn:[68,82],cp:[35,95]},
-  {n:9,nm:"Carolina Cherry",p:4,y:460,tee:[70,78],grn:[118,52],cp:[95,58]},
-  {n:10,nm:"Camellia",p:4,y:495,tee:[155,38],grn:[148,98],cp:[158,68]},
-  {n:11,nm:"White Dogwood",p:4,y:520,tee:[146,103],grn:[108,152],cp:[130,132]},
-  {n:12,nm:"Golden Bell",p:3,y:155,tee:[105,158],grn:[130,162],cp:[118,155]},
-  {n:13,nm:"Azalea",p:5,y:510,tee:[108,168],grn:[142,145],cp:[115,148]},
-  {n:14,nm:"Chinese Fir",p:4,y:440,tee:[144,142],grn:[155,105],cp:[152,122]},
-  {n:15,nm:"Firethorn",p:5,y:530,tee:[157,102],grn:[120,140],cp:[145,128]},
-  {n:16,nm:"Redbud",p:3,y:170,tee:[118,143],grn:[145,135],cp:[132,135]},
-  {n:17,nm:"Nandina",p:4,y:440,tee:[147,132],grn:[158,92],cp:[155,112]},
-  {n:18,nm:"Holly",p:4,y:465,tee:[160,88],grn:[160,40],cp:[165,64]}
+  {n:1,nm:"Tea Olive",p:4,y:445,tee:[166,82],grn:[108,45],cp:[137,64]},
+  {n:2,nm:"Pink Dogwood",p:5,y:575,tee:[96,40],grn:[109,119],cp:[102,80]},
+  {n:3,nm:"Flowering Peach",p:4,y:350,tee:[109,128],grn:[67,94],cp:[88,111]},
+  {n:4,nm:"Flowering Crab Apple",p:3,y:240,tee:[73,89],grn:[35,92],cp:[54,90]},
+  {n:5,nm:"Magnolia",p:4,y:495,tee:[51,109],grn:[43,154],cp:[47,132]},
+  {n:6,nm:"Juniper",p:3,y:180,tee:[45,144],grn:[53,119],cp:[49,132]},
+  {n:7,nm:"Pampas",p:4,y:450,tee:[44,109],grn:[111,134],cp:[78,122]},
+  {n:8,nm:"Yellow Jasmine",p:5,y:570,tee:[127,138],grn:[105,59],cp:[116,98]},
+  {n:9,nm:"Carolina Cherry",p:4,y:460,tee:[108,62],grn:[156,84],cp:[132,73]},
+  {n:10,nm:"Camellia",p:4,y:495,tee:[172,90],grn:[159,160],cp:[166,125]},
+  {n:11,nm:"White Dogwood",p:4,y:520,tee:[183,150],grn:[131,211],cp:[157,180]},
+  {n:12,nm:"Golden Bell",p:3,y:155,tee:[126,204],grn:[114,223],cp:[120,214]},
+  {n:13,nm:"Azalea",p:5,y:510,tee:[131,232],grn:[74,177],cp:[102,204]},
+  {n:14,nm:"Chinese Fir",p:4,y:440,tee:[74,169],grn:[144,171],cp:[109,170]},
+  {n:15,nm:"Firethorn",p:5,y:530,tee:[159,168],grn:[74,145],cp:[116,156]},
+  {n:16,nm:"Redbud",p:3,y:170,tee:[69,154],grn:[58,133],cp:[64,144]},
+  {n:17,nm:"Nandina",p:4,y:440,tee:[61,128],grn:[130,147],cp:[96,138]},
+  {n:18,nm:"Holly",p:4,y:465,tee:[139,155],grn:[158,92],cp:[148,124]}
 ];
 // Water features at Augusta
 var WATER=[
-  // Rae's Creek through Amen Corner
-  {type:"creek",pts:[[60,185],[78,172],[95,165],[110,160],[128,158],[140,162],[148,168]]},
-  // Pond between 15 green and 16 tee
-  {type:"pond",cx:128,cy:148,rx:8,ry:5},
+  {type:"creek",pts:[[33,161],[50,179],[67,196],[83,205],[100,214],[117,218],[133,223],[150,232]]},
+  {type:"pond",cx:120,cy:218,rx:7,ry:5},
+  {type:"pond",cx:63,cy:152,rx:6,ry:4}
 ];
 
 function getAllDraftedGolfers(){
@@ -467,7 +472,7 @@ function getAllDraftedGolfers(){
 
 function renderMap(){
   var golfers=getAllDraftedGolfers();
-  var h='<svg class="crs-svg" viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg">';
+  var h='<svg class="crs-svg" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">';
 
   // Defs
   h+='<defs>';
@@ -477,15 +482,11 @@ function renderMap(){
   h+='</defs>';
 
   // Background
-  h+='<rect width="200" height="210" fill="#000"/>';
-  h+='<rect width="200" height="210" fill="url(#dg)"/>';
+  h+='<rect width="200" height="250" fill="#000"/>';
+  h+='<rect width="200" height="250" fill="url(#dg)"/>';
 
   // Course boundary (subtle)
-  h+='<rect x="15" y="15" width="170" height="185" rx="4" fill="none" stroke="rgba(0,255,100,.03)" stroke-width=".3"/>';
-
-  // Clubhouse
-  h+='<rect x="145" y="22" width="16" height="10" rx="1.5" class="crs-clubhouse"/>';
-  h+='<text x="153" y="28.5" class="crs-label" text-anchor="middle" style="font-size:2.5px;fill:rgba(255,255,255,.12)">CLUBHOUSE</text>';
+  h+='<rect x="2" y="25" width="196" height="225" rx="4" fill="none" stroke="rgba(0,255,100,.03)" stroke-width=".3"/>';
 
   // Water features
   // Rae's Creek
@@ -494,12 +495,17 @@ function renderMap(){
   for(var i=1;i<ck.length;i++)h+=' L'+ck[i][0]+','+ck[i][1];
   h+='" class="crs-creek" filter="url(#fmb)"/>';
   // Pond
-  var pd=WATER[1];
-  h+='<ellipse cx="'+pd.cx+'" cy="'+pd.cy+'" rx="'+pd.rx+'" ry="'+pd.ry+'" class="crs-water" filter="url(#fmb)"/>';
+  for(var wi=1;wi<WATER.length;wi++){var pd=WATER[wi];if(pd.type==="pond")h+='<ellipse cx="'+pd.cx+'" cy="'+pd.cy+'" rx="'+pd.rx+'" ry="'+pd.ry+'" class="crs-water" filter="url(#fmb)"/>';}
 
   // Amen Corner label
-  h+='<text x="120" y="175" class="crs-label" text-anchor="middle" style="font-size:2.2px;fill:rgba(0,255,120,.06);letter-spacing:1.5px">AMEN CORNER</text>';
+  h+='<rect x="90" y="209" width="32" height="6" rx="1.5" fill="rgba(0,0,0,.85)"/>';
+  h+='<text x="106" y="214" class="crs-label" text-anchor="middle" style="font-size:3.2px;fill:rgba(0,255,120,.45);letter-spacing:1.5px;font-weight:bold">AMEN CORNER</text>';
 
+
+
+  // Greenside bunkers
+  var bkrs=[[102,42,3,1.5,-2],[113,47,2.5,1.2,5],[103,116,3,1.5,6],[114,121,2.5,1.2,0],[61,91,3,1.5,-10],[72,96,2.5,1.2,-5],[29,89,3,1.5,-2],[40,94,2.5,1.2,10],[37,151,3,1.5,6],[48,156,2.5,1.2,5],[47,116,3,1.5,-10],[58,121,2.5,1.2,0],[105,131,3,1.5,-2],[116,136,2.5,1.2,-5],[99,56,3,1.5,6],[110,61,2.5,1.2,10],[150,81,3,1.5,-10],[161,86,2.5,1.2,5],[153,157,3,1.5,-2],[164,162,2.5,1.2,0],[125,208,3,1.5,6],[136,213,2.5,1.2,-5],[108,220,3,1.5,-10],[119,225,2.5,1.2,10],[68,174,3,1.5,-2],[79,179,2.5,1.2,5],[138,168,3,1.5,6],[149,173,2.5,1.2,0],[68,142,3,1.5,-10],[79,147,2.5,1.2,-5],[52,130,3,1.5,-2],[63,135,2.5,1.2,10],[124,144,3,1.5,6],[135,149,2.5,1.2,5],[152,89,3,1.5,-10],[163,94,2.5,1.2,0]];
+  for(var bi=0;bi<bkrs.length;bi++){var bp=bkrs[bi];h+='<ellipse cx="'+bp[0]+'" cy="'+bp[1]+'" rx="'+bp[2]+'" ry="'+bp[3]+'" fill="rgba(210,170,80,.7)" stroke="rgba(210,170,80,.9)" stroke-width=".5" transform="rotate('+bp[4]+' '+bp[0]+' '+bp[1]+')"/>';}
   // Draw each hole
   HOLES_MAP.forEach(function(hole){
     var t=hole.tee,g=hole.grn,c=hole.cp;
@@ -545,8 +551,13 @@ function renderMap(){
   h+='<text x="25" y="206" fill="rgba(0,255,120,.06)" font-size="2" text-anchor="middle" font-family="JetBrains Mono">100 YDS</text>';
 
   // Title
-  h+='<text x="100" y="10" fill="rgba(0,255,120,.08)" font-size="3" text-anchor="middle" font-family="JetBrains Mono" letter-spacing="2">AUGUSTA NATIONAL GOLF CLUB</text>';
+  h+='<rect x="65" y="235" width="70" height="6" rx="1" fill="rgba(0,0,0,.7)"/>';
+  h+='<text x="100" y="240" fill="rgba(0,255,120,.5)" font-size="5" text-anchor="middle" font-family="JetBrains Mono" letter-spacing="3" font-weight="bold">AUGUSTA NATIONAL GOLF CLUB</text>';
 
+  // Clubhouse
+  h+='<rect x="178" y="56" width="10" height="7" rx="1" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.35)" stroke-width=".5"/>';
+  h+='<rect x="170" y="51" width="26" height="4" rx="1" fill="rgba(0,0,0,.7)"/>';
+  h+='<text x="183" y="54" class="crs-label" text-anchor="middle" style="font-size:2.5px;fill:rgba(255,255,255,.5);letter-spacing:.8px">CLUBHOUSE</text>';
   h+='</svg>';
 
   // Info below map
