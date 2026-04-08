@@ -69,8 +69,11 @@ html,body{overflow-x:hidden}body{background:#0d2818;color:#fff;font-family:'Sour
 .gsc{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;width:38px;text-align:right}
 .gw{font-size:8px;color:#ff9800;margin-left:3px}.gcut{font-size:8px;font-weight:700;color:#e74c3c;margin-left:3px}
 .su{color:#e74c3c}.so{color:#4caf50}.se{color:#fff}.na{color:#3a5a3a}
-.tip{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:80px;background:#0a1f14;border:1px solid #c8a951;border-radius:6px;padding:12px;width:260px;z-index:250;box-shadow:0 4px 16px rgba(0,0,0,.6);font-weight:400;font-style:normal;text-decoration:none;color:#fff;max-height:60vh;overflow-y:auto}
-.tip.show{display:block}.tip-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.tip{display:none;position:fixed;left:0;right:0;bottom:0;top:auto;background:#0a1f14;border-top:2px solid #c8a951;padding:20px 16px 30px;width:100%;max-width:100%;z-index:300;box-shadow:0 -4px 24px rgba(0,0,0,.8);font-weight:400;font-style:normal;text-decoration:none;color:#fff;max-height:80vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s ease}
+.tip.show{transform:translateY(0)}
+.tip-close{position:absolute;top:8px;right:12px;background:none;border:none;color:#c8a951;font-size:22px;cursor:pointer;padding:4px 8px;z-index:301}
+.tip-close:hover{color:#fff}
+.tip-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .tip-hs{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid #c8a951}
 .tip-nm{font-size:13px;font-weight:700}.tip-ctry{font-size:10px;color:#8fbc8f}
 .tip-r{font-size:11px;color:#8fbc8f;padding:1px 0}.tip-r span{color:#c8a951;font-family:'IBM Plex Mono',monospace}
@@ -137,6 +140,43 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 .crs-label{fill:rgba(0,255,120,.1);font-family:'JetBrains Mono',monospace;font-size:3.5px;letter-spacing:.5px}
 
 .footer{text-align:center;padding:18px;font-size:12px;color:#c8a951;letter-spacing:3px;border-top:1px solid #2d5a3f;background:#0a1f14;position:relative;z-index:5;font-family:'DM Serif Display',serif;font-weight:700;text-transform:uppercase}
+
+@media(min-width:768px){
+.hdr{padding:20px 40px 12px}
+.leaders-bar{font-size:42px;letter-spacing:10px}
+.hdr-sub{font-size:15px;letter-spacing:3px}
+.hdr-rule{font-size:11px}
+.hdr-mark{font-size:13px}
+.hdr-mark span{font-size:10px}
+.dubra-logo{width:110px}
+.cd{padding:16px}
+.cd-label{font-size:11px}
+.cd-num{font-size:28px}
+.cd-unit{font-size:8px}
+.tabs{max-width:900px;margin:0 auto}
+.tab{font-size:13px;padding:12px 8px}
+.status{padding:8px 40px;font-size:12px}
+.board{padding:8px 40px;max-width:1000px;margin:0 auto}
+.tc{margin-bottom:10px}
+.th2{padding:12px 16px}
+.th2-nm{font-size:18px}
+.th2-score{font-size:15px}
+.gr2{padding:8px 16px;font-size:14px}
+.nm{font-size:14px}
+.gsc{font-size:13px}
+.hs2{width:30px;height:30px}
+.dw{padding:18px 40px}
+.dw-hd{font-size:18px}
+.sbtn{font-size:14px;padding:10px 28px}
+.legend{padding:18px 40px;font-size:13px;max-width:800px;margin:6px auto}
+.tip{max-width:500px;left:50%;right:auto;transform:translateX(-50%) translateY(100%);border-radius:12px 12px 0 0}
+.tip.show{transform:translateX(-50%) translateY(0)}
+.tip-top{margin-bottom:8px}
+.tip-nm{font-size:18px}
+.tip-r{font-size:13px;padding:4px 0}
+.tip-hs{width:50px;height:50px}
+.footer{font-size:14px;padding:22px;letter-spacing:4px}
+}
 </style>
 </head>
 <body>
@@ -329,7 +369,7 @@ function gRow(g,counting){
 var tipCache={},activeTip=null;
 function toggleTip(el,name){
   var tip=document.getElementById("gtip");if(!tip)return;
-  if(activeTip&&activeTip===name){tip.classList.remove("show");activeTip=null;return}
+  if(activeTip&&activeTip===name){var gt2=tip;gt2.classList.remove('show');setTimeout(function(){gt2.style.display='none'},300);activeTip=null;return}
   activeTip=name;
   var s=gs2(name),a=ga(name);var h='<div class="tip-top">'+(a.hs?'<img class="tip-hs" src="'+a.hs+'" crossorigin="anonymous" onerror="this.style.display=\'none\'">':'')+'<div><div class="tip-nm">'+name+'</div>'+(a.country?'<div class="tip-ctry">'+a.country+'</div>':'')+'</div></div>';
   if(a.pos)h+='<div class="tip-r">Position: <span>'+a.pos+'</span></div>';
@@ -340,10 +380,10 @@ function toggleTip(el,name){
   else h+='<div class="tip-r">Tournament starts April 9</div>';
   var aid=a.id||(HEADSHOTS[name]&&HEADSHOTS[name].id)||"";
   if(aid&&!tipCache[name]&&!tipCache["_loading_"+name]){tipCache["_loading_"+name]=true;fetch("https://site.web.api.espn.com/apis/common/v3/sports/golf/pga/athletes/"+aid).then(function(r){return r.json()}).then(function(ad){var x="";if(ad.age)x+='<div class="tip-r">Age: <span>'+ad.age+'</span></div>';if(ad.birthPlace&&ad.birthPlace.city)x+='<div class="tip-r">From: <span>'+ad.birthPlace.city+(ad.birthPlace.state?", "+ad.birthPlace.state:"")+'</span></div>';if(ad.experience&&ad.experience.displayValue)x+='<div class="tip-r">Exp: <span>'+ad.experience.displayValue+'</span></div>';tipCache[name]=h+x;if(tip.classList.contains("show"))tip.innerHTML=tipCache[name]}).catch(function(){})}
-  tip.innerHTML=tipCache[name]||h;tip.classList.add("show");
+  tip.innerHTML='<button class="tip-close" onclick="document.getElementById(\'gtip\').classList.remove(\'show\');activeTip=null">&times;</button>'+(tipCache[name]||h);tip.style.display='block';setTimeout(function(){tip.classList.add('show')},10);
 }
 // Close tooltip on any tap outside
-document.addEventListener("click",function(e){if(activeTip&&!e.target.closest(".gn2")){document.getElementById("gtip").classList.remove("show");activeTip=null}});
+document.addEventListener("click",function(e){if(activeTip&&!e.target.closest(".gn2")){var gt=document.getElementById('gtip');gt.classList.remove('show');setTimeout(function(){gt.style.display='none'},300);activeTip=null}});
 
 // MODAL WITH COURSE MAP
 function openModal(team){
