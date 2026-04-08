@@ -491,6 +491,27 @@ var HOLES_MAP=[
   {n:17,nm:"Nandina",p:4,y:440,tee:[61,128],grn:[130,147],cp:[96,138]},
   {n:18,nm:"Holly",p:4,y:465,tee:[139,155],grn:[158,92],cp:[148,124]}
 ];
+// Hole photos — NBCSports Augusta National photography (all 18 holes)
+var HOLE_PHOTOS={
+  1:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/fb/8d/dc3d48d34ab7b0f6ae8e17b2270a/augusta1-0.jpg',
+  2:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/68/88/824976382daaa1c8077ab4aa74ac/augusta2-0.jpg',
+  3:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/f8/25/7ea9b24abd672c7c85a6b1fa8b05/augusta3-0.jpg',
+  4:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/c1/a3/b0033e7e529ef61df9587fce6c2b/augusta4-0.jpg',
+  5:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/a0/38/6108c9b74c93b743da3735b25eeb/augusta5-0.jpg',
+  6:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/08/5f/0390e394585668e3eb8d5ae92f7d/augusta6-0.jpg',
+  7:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/be/c3/267a984d28f03d4377ea0bfeaf02/augusta7-0.jpg',
+  8:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/d8/75/e125f8b51bfabbeb852870e4bc16/augusta8-0.jpg',
+  9:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/19/e4/a97d87689937e5e8a7df6532af31/augusta9-0.jpg',
+  10:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/3a/d3/9a642f245d3e8f9f0af9e3083f9f/augusta10-0.jpg',
+  11:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/fc/68/7ca396771855c97493ba5aa3cfbe/augusta11-0.jpg',
+  12:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/05/c7/1fd9701745a31f60aa137d62c01a/augusta12-0.jpg',
+  13:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/4b/47/142eb4ddd49fb5523f5ef0156198/augusta13-0.jpg',
+  14:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/58/06/1d855ab93f6204aa6fd7759d6622/augusta14-0.jpg',
+  15:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/22/6b/c24cfe46875d72541987a3d8b4ac/augusta15-0.jpg',
+  16:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/8e/35/51695f2e8fafa87724b86431cdf0/augusta16-0.jpg',
+  17:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/62/ca/4775ad31caea272cb4014ba33ce1/augusta17-0.jpg',
+  18:'https://nbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com/brightspot/27/30/b2916f7a14cc56a31e5f0af0b39c/augusta18-0.jpg'
+};
 // Water features at Augusta
 var WATER=[
   {type:"creek",pts:[[33,161],[50,179],[67,196],[83,205],[100,214],[117,218],[133,223],[150,232]]},
@@ -690,7 +711,14 @@ function openHoleDetail(n){
   if(!hole)return;
   var d=HD[n];
   var golfers=getAllDraftedGolfers().filter(function(g){return g.hole===n&&!g.cut});
-  var h='<div style="background:rgba(0,8,4,.95);border:1px solid rgba(0,255,100,.1);border-radius:4px;overflow:hidden">';
+  var overlay=document.getElementById("hole-overlay");
+  var photo=HOLE_PHOTOS[n];
+  if(photo){
+    overlay.style.background='linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),url('+photo+') center/cover no-repeat';
+  } else {
+    overlay.style.background='rgba(0,0,0,.85)';
+  }
+  var h='<div style="background:rgba(0,8,4,.88);border:1px solid rgba(0,255,100,.15);border-radius:4px;overflow:hidden;backdrop-filter:blur(2px)">';
   h+='<button onclick="closeHoleOverlay()" style="position:absolute;top:28px;right:22px;background:none;border:none;color:rgba(0,255,120,.3);font-size:16px;cursor:pointer;z-index:10;font-family:JetBrains Mono,monospace">&#10005;</button>';
   h+='<div style="display:flex;justify-content:space-between;align-items:baseline;padding:12px 14px;background:rgba(0,12,6,.8);border-bottom:1px solid rgba(0,255,100,.06)">';
   h+='<div><span style="font-size:22px;font-weight:600;color:rgba(0,255,120,.6);font-family:JetBrains Mono,monospace">'+n+'</span> <span style="font-size:9px;color:rgba(0,255,120,.25);letter-spacing:3px;text-transform:uppercase;font-family:JetBrains Mono,monospace">'+hole.nm+'</span></div>';
@@ -721,7 +749,7 @@ function openHoleDetail(n){
   document.getElementById("hole-overlay-content").innerHTML=h;
   document.getElementById("hole-overlay").style.display="block";
 }
-function closeHoleOverlay(){document.getElementById("hole-overlay").style.display="none"}
+function closeHoleOverlay(){var o=document.getElementById("hole-overlay");o.style.display="none";o.style.background="rgba(0,0,0,.85)";}
 
 // Azalea decorations
 
