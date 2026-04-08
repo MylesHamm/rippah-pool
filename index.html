@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rippah Pool — The Masters 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--g:#1a472a;--dg:#0d2818;--gold:#d4af37;--yel:#f2c744;--red:#e74c3c;--lg:#2d6a4f;--bg:#2d5a3f}
+  body{background:var(--dg);color:#fff;font-family:'Source Sans 3',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+  .header{background:var(--dg);text-align:center;padding:20px 16px 14px;border-bottom:2px solid var(--gold);position:relative}
+  .header-title{font-family:'DM Serif Display',serif;font-size:28px;color:var(--gold);letter-spacing:4px;text-transform:uppercase}
+  .header-sub{font-size:13px;color:#8fbc8f;margin-top:4px;letter-spacing:1px}
+  .header-sponsor{margin-top:8px;font-size:9px;color:#5a7a5a;letter-spacing:2px;text-transform:uppercase}
+  .header-sponsor strong{color:#8fbc8f;font-size:11px;letter-spacing:1.5px}
+  .az{opacity:.6;position:absolute}
+
+  .tabs{display:flex;background:var(--g);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--bg)}
+  .tab{flex:1;padding:12px 8px;text-align:center;font-family:'Source Sans 3',sans-serif;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#8fbc8f;background:transparent;border:none;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s}
+  .tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(0,0,0,.15)}
+
+  .status-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--dg);border-bottom:1px solid var(--bg);font-size:11px;color:#5a7a5a}
+  .rbtn{padding:4px 12px;background:var(--lg);color:#fff;border:none;border-radius:4px;font-size:11px;cursor:pointer;font-family:'Source Sans 3',sans-serif}
+
+  .ldr-hdr{display:grid;grid-template-columns:36px 1fr 48px 40px 40px 40px 40px 48px;padding:8px 10px;background:var(--dg);border-bottom:2px solid var(--gold);font-size:9px;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;position:sticky;top:47px;z-index:90}
+  .ldr-hdr span{text-align:center}
+  .ldr-hdr span:nth-child(2){text-align:left;padding-left:6px}
+
+  .tb{border-bottom:1px solid var(--bg)}
+  .th{display:grid;grid-template-columns:36px 1fr 48px 48px;padding:10px 10px;background:var(--g);align-items:center;cursor:pointer;user-select:none}
+  .th:active{background:var(--lg)}
+  .tp{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;text-align:center;color:var(--gold)}
+  .tn{font-size:15px;font-weight:700;padding-left:6px;letter-spacing:.5px}
+  .ts{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;text-align:center}
+  .tt{font-family:'IBM Plex Mono',monospace;font-size:12px;text-align:center;color:#8fbc8f}
+
+  .gr{display:grid;grid-template-columns:36px 1fr 48px 40px 40px 40px 40px 48px;padding:5px 10px;background:rgba(0,0,0,.12);align-items:center;font-size:11px;border-bottom:1px solid rgba(255,255,255,.04)}
+  .gr.bench{opacity:.35}
+  .gr.cut .gn{text-decoration:line-through;color:#555}
+  .gi{text-align:center;font-size:8px}
+  .gn{padding-left:6px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gs,.grd{font-family:'IBM Plex Mono',monospace;font-size:11px;text-align:center}
+  .grd{color:#8fbc8f}
+  .gtot{font-family:'IBM Plex Mono',monospace;font-size:11px;text-align:center;color:#aaa}
+  .su{color:var(--yel)}.so{color:var(--red)}.se{color:#fff}
+
+  .draft-c{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .dt{width:100%;min-width:680px;border-collapse:collapse}
+  .dt th{padding:10px 6px;font-size:11px;font-weight:700;text-align:center;background:var(--dg);color:var(--gold);letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid var(--gold);position:sticky;top:47px;z-index:90}
+  .dt td{padding:10px 6px;font-size:11px;text-align:center;border-bottom:1px solid var(--bg);color:#fff}
+  .dt tr:nth-child(odd) td{background:var(--g)}
+  .dt tr:nth-child(even) td{background:var(--dg)}
+  .dt td:first-child{font-weight:700;color:var(--gold);font-family:'IBM Plex Mono',monospace}
+  .de{color:#3a5a3a;font-style:italic;font-size:10px}
+
+  .pc{margin:12px;border:1px solid var(--bg);border-radius:8px;overflow:hidden;background:var(--g)}
+  .ph{padding:10px 14px;background:var(--dg);border-bottom:1px solid var(--gold);display:flex;justify-content:space-between;align-items:center}
+  .pd{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);font-weight:600;padding:2px 8px;border:1px solid var(--gold);border-radius:3px}
+  .ptl{font-weight:700;font-size:13px}
+  .pds{font-size:10px;color:#8fbc8f;margin-top:2px}
+  .pr{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px}
+  .pr.w{background:rgba(212,175,55,.1)}
+  .pv{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--gold);min-width:50px;text-align:center;cursor:pointer;padding:2px 8px;border-radius:4px;background:rgba(0,0,0,.2)}
+  .pi{width:60px;text-align:center;padding:4px;background:var(--dg);border:1px solid var(--gold);border-radius:4px;color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none}
+
+  .pre-b{text-align:center;padding:16px;background:var(--g);border-bottom:1px solid var(--bg);font-size:13px;color:#8fbc8f}
+  .pre-b strong{color:var(--gold)}
+  .rules{text-align:center;padding:8px;font-size:10px;color:#5a7a5a;background:var(--dg);border-top:1px solid var(--bg);letter-spacing:.5px}
+  .footer{text-align:center;padding:20px;font-size:10px;color:#3a5a3a;border-top:1px solid var(--bg);letter-spacing:1px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="az" style="top:8px;left:12px;font-size:22px">🌺</span>
+  <span class="az" style="top:14px;left:38px;font-size:13px">🌸</span>
+  <span class="az" style="top:8px;right:12px;font-size:22px">🌺</span>
+  <span class="az" style="top:14px;right:38px;font-size:13px">🌸</span>
+  <div class="header-title">The Masters</div>
+  <div class="header-sub">2026 Rippah Pool</div>
+  <div class="header-sponsor">Proudly Sponsored By <strong>DUBRA VODKA</strong></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" id="btn-pool" onclick="showTab('pool')">Leaderboard</button>
+  <button class="tab" id="btn-draft" onclick="showTab('draft')">Draft</button>
+  <button class="tab" id="btn-props" onclick="showTab('props')">Props</button>
+</div>
+
+<div id="tab-pool">
+  <div class="status-bar">
+    <span id="st">Fetching scores...</span>
+    <button class="rbtn" onclick="fetchScores()">↻ Refresh</button>
+  </div>
+  <div id="pre-b" class="pre-b">Tournament starts <strong>April 9</strong> — Scores auto-populate once play begins</div>
+  <div class="ldr-hdr"><span>#</span><span>TEAM</span><span>SCORE</span><span>R1</span><span>R2</span><span>R3</span><span>R4</span><span>TOT</span></div>
+  <div class="rules">TOP 3 OF 5 GOLFERS COUNT · MISSED CUTS CARD 80 FOR SAT & SUN</div>
+  <div id="stc"></div>
+</div>
+
+<div id="tab-draft" style="display:none">
+  <div class="draft-c" id="dc"></div>
+</div>
+
+<div id="tab-props" style="display:none">
+  <div id="prc"></div>
+</div>
+
+<div class="footer">🌺 A tradition unlike any other 🌺</div>
+
+<script>
+const T=["Calvini","Logan","Horse","Arthur","PJ","Kong","Hamm","Conor"];
+const SN=[[0,1,2,3,4,5,6,7],[7,6,5,4,3,2,1,0],[0,1,2,3,4,5,6,7],[7,6,5,4,3,2,1,0],[0,1,2,3,4,5,6,7]];
+
+const D={
+  Calvini:["Scottie Scheffler","","","",""],
+  Logan:["Ludvig Åberg","Jason Day","","",""],
+  Horse:["Xander Schauffele","Min Woo Lee","","",""],
+  Arthur:["Bryson DeChambeau","Shane Lowry","","",""],
+  PJ:["Matt Fitzpatrick","Robert MacIntyre","","",""],
+  Kong:["Collin Morikawa","Justin Rose","","",""],
+  Hamm:["Jon Rahm","Tommy Fleetwood","","",""],
+  Conor:["Rory McIlroy","Cameron Young","","",""],
+};
+
+const SB=[
+  {k:"thursday",d:"THU",l:"Thursday — Birdies/Eagles",ds:"Most combined birdies/eagles. Birdies=1, Eagles=2."},
+  {k:"friday",d:"FRI",l:"Friday — Bogeys",ds:"Most combined bogeys. Doubles=2, Triples=3."},
+  {k:"saturday",d:"SAT",l:"Saturday — Driving Distance",ds:"Longest combined driving distance (individual)."},
+  {k:"sunday",d:"SUN",l:"Sunday — Amen Corner",ds:"Best 2 combined Amen Corner scores (11,12,13). Lowest wins."},
+];
+
+let sc={};
+let sbd=JSON.parse(localStorage.getItem('rippah-sb')||'{}');
+
+function showTab(t){
+  ['pool','draft','props'].forEach(x=>{
+    document.getElementById('tab-'+x).style.display=x===t?'':'none';
+    document.getElementById('btn-'+x).classList.toggle('active',x===t);
+  });
+  if(t==='draft')renderDraft();
+  if(t==='props')renderProps();
+}
+
+async function fetchScores(){
+  document.getElementById('st').textContent='Fetching...';
+  try{
+    const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard');
+    const d=await r.json();
+    const ev=d?.events?.find(e=>(e.name||'').toLowerCase().includes('masters')||(e.shortName||'').toLowerCase().includes('masters'));
+    if(ev){
+      const ps=ev.competitions?.[0]?.competitors||[];
+      sc={};
+      ps.forEach(p=>{
+        const n=p.athlete?.displayName;if(!n)return;
+        const rds=(p.linescores||[]).map(x=>parseInt(x.value)).filter(v=>!isNaN(v));
+        const tp=parseInt(p.score);
+        const cut=p.status?.type?.name==='STATUS_CUT'||(p.status?.type?.description||'').toLowerCase()==='cut';
+        sc[n]={rounds:rds,toPar:isNaN(tp)?null:tp,cut,total:rds.reduce((a,b)=>a+b,0)};
+      });
+      const st=ev.status?.type?.name;
+      document.getElementById('pre-b').style.display=st==='STATUS_SCHEDULED'?'':'none';
+      document.getElementById('st').textContent='Updated '+new Date().toLocaleTimeString();
+    }else{
+      document.getElementById('st').textContent='No Masters data yet';
+    }
+  }catch(e){
+    document.getElementById('st').textContent='ESPN unavailable';
+    console.error(e);
+  }
+  renderStandings();
+}
+
+function gs(n){
+  if(!n)return null;
+  if(sc[n])return sc[n];
+  const lo=n.toLowerCase();
+  for(const[k,v]of Object.entries(sc))if(k.toLowerCase()===lo)return v;
+  return null;
+}
+
+function scl(tp){return tp===null||tp===undefined?'':tp<0?'su':tp>0?'so':'se'}
+function ftp(tp){return tp===null||tp===undefined?'—':tp===0?'E':tp>0?'+'+tp:''+tp}
+
+function calcTeam(team){
+  const gs2=(D[team]||[]).map(g=>{
+    if(!g)return null;
+    const s=gs(g);
+    if(!s)return{name:g,total:null,toPar:null,cut:false,rounds:[]};
+    let tot=s.total||0;
+    if(s.cut&&s.rounds.length<4)tot+=(4-s.rounds.length)*80;
+    return{name:g,total:tot,toPar:s.toPar,cut:s.cut,rounds:s.rounds};
+  }).filter(Boolean);
+  const ws=gs2.filter(s=>s.total!==null).sort((a,b)=>a.total-b.total);
+  const ns=gs2.filter(s=>s.total===null);
+  const counting=ws.slice(0,3);
+  const bench=[...ws.slice(3),...ns];
+  const tt=counting.length>=3?counting.reduce((a,b)=>a+b.total,0):null;
+  return{counting,bench,teamTotal:tt,all:gs2};
+}
+
+function renderStandings(){
+  const rk=T.map(t=>({team:t,...calcTeam(t)})).sort((a,b)=>{
+    if(a.teamTotal===null&&b.teamTotal===null)return 0;
+    if(a.teamTotal===null)return 1;
+    if(b.teamTotal===null)return -1;
+    return a.teamTotal-b.teamTotal;
+  });
+  let h='';
+  rk.forEach((r,i)=>{
+    const pos=r.teamTotal!==null?(i+1):'-';
+    const tot=r.teamTotal!==null?r.teamTotal:'—';
+    h+=`<div class="tb"><div class="th" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'':'none'">`;
+    h+=`<span class="tp">${pos}</span><span class="tn">${r.team}</span>`;
+    h+=`<span class="ts">${tot}</span><span class="tt">${r.counting.length}/3</span></div>`;
+    h+=`<div>`;
+    r.counting.forEach(g=>{h+=grow(g,true)});
+    r.bench.forEach(g=>{h+=grow(g,false)});
+    h+=`</div></div>`;
+  });
+  document.getElementById('stc').innerHTML=h;
+}
+
+function grow(g,counting){
+  const cc=g.cut?' cut':'';
+  const bc=counting?'':' bench';
+  const ind=counting?'<span style="color:var(--gold)">●</span>':'<span style="color:#3a5a3a">○</span>';
+  const r1=g.rounds[0]||'—';
+  const r2=g.rounds[1]||'—';
+  const r3=g.rounds[2]||(g.cut&&g.rounds.length<3?'80':'—');
+  const r4=g.rounds[3]||(g.cut&&g.rounds.length<4?'80':'—');
+  const cl=g.cut?' <span style="color:var(--red);font-size:9px;font-weight:700">CUT</span>':'';
+  return`<div class="gr${bc}${cc}"><span class="gi">${ind}</span><span class="gn">${g.name}${cl}</span><span class="gs ${scl(g.toPar)}">${ftp(g.toPar)}</span><span class="grd">${r1}</span><span class="grd">${r2}</span><span class="grd">${r3}</span><span class="grd">${r4}</span><span class="gtot">${g.total!==null?g.total:'—'}</span></div>`;
+}
+
+function renderDraft(){
+  let h='<table class="dt"><thead><tr><th>RD</th>';
+  T.forEach(t=>{h+=`<th>${t}</th>`});
+  h+='</tr></thead><tbody>';
+  SN.forEach((o,rd)=>{
+    h+='<tr><td>'+(rd+1)+'</td>';
+    T.forEach((t,ti)=>{
+      const g=D[t]?.[rd]||'';
+      const gp=rd*8+o.indexOf(ti)+1;
+      h+=`<td>${g||'<span class="de">#'+gp+'</span>'}</td>`;
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById('dc').innerHTML=h;
+}
+
+function renderProps(){
+  let h='';
+  SB.forEach(sb=>{
+    const data=sbd[sb.k]||{};
+    const entries=Object.entries(data).filter(([,v])=>v!==''&&v!=null);
+    let winner=null;
+    if(entries.length>0){
+      if(sb.k==='sunday')winner=entries.reduce((b,[t,v])=>parseFloat(v)<parseFloat(b[1])?[t,v]:b)[0];
+      else winner=entries.reduce((b,[t,v])=>parseFloat(v)>parseFloat(b[1])?[t,v]:b)[0];
+    }
+    h+=`<div class="pc"><div class="ph"><div><div class="ptl">${sb.l}</div><div class="pds">${sb.ds}</div></div><span class="pd">${sb.d}</span></div>`;
+    T.forEach(t=>{
+      const v=data[t]||'';
+      const iw=winner===t;
+      h+=`<div class="pr${iw?' w':''}"><span>${iw?'🏆 ':''}${t}</span>`;
+      h+=`<span class="pv" onclick="editP('${sb.k}','${t}',this)">${v||'—'}</span></div>`;
+    });
+    h+=`</div>`;
+  });
+  document.getElementById('prc').innerHTML=h;
+}
+
+function editP(k,t,el){
+  const cur=sbd[k]?.[t]||'';
+  el.innerHTML=`<input class="pi" value="${cur}" onblur="saveP('${k}','${t}',this)" onkeydown="if(event.key==='Enter')this.blur()">`;
+  el.querySelector('input').focus();
+}
+function saveP(k,t,inp){
+  if(!sbd[k])sbd[k]={};
+  sbd[k][t]=inp.value;
+  localStorage.setItem('rippah-sb',JSON.stringify(sbd));
+  renderProps();
+}
+
+fetchScores();
+setInterval(fetchScores,180000);
+renderStandings();
+</script>
+</body>
+</html>
