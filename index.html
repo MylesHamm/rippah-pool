@@ -18,14 +18,14 @@ html,body{overflow-x:hidden}body{background:#0d2818;color:#fff;font-family:'Sour
 .azalea svg{display:block;overflow:visible}
 .azalea-wrap{position:relative;overflow:hidden}
 .hdr{background:#0a1f14;padding:12px 16px 8px;text-align:center;border-bottom:3px solid #c8a951}
-.hdr-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.hdr-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;position:relative;z-index:5}
 .hdr-mark{font-family:'DM Serif Display',serif;font-size:10px;color:#8fbc8f;text-align:left;line-height:1.3}
 .hdr-mark span{display:block;font-size:8px;color:#5a7a5a;letter-spacing:1px;text-transform:uppercase;font-family:'Source Sans 3',sans-serif}
 .hdr-sponsor{text-align:right}.hdr-by{font-size:7px;color:#5a7a5a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px}
 .dubra-logo{width:85px;height:auto;display:block;margin-left:auto}
-.leaders-bar{font-family:'DM Serif Display',serif;font-size:28px;color:#fff;letter-spacing:6px;padding:8px 0 4px;text-transform:uppercase;text-shadow:0 1px 3px rgba(0,0,0,.4)}
-.hdr-sub{font-size:11px;color:#c8a951;margin-top:2px;letter-spacing:2px;font-weight:600}
-.hdr-rule{font-size:9px;color:#5a7a5a;margin-top:5px}
+.leaders-bar{font-family:'DM Serif Display',serif;font-size:28px;color:#fff;letter-spacing:6px;padding:8px 0 4px;text-transform:uppercase;text-shadow:0 1px 3px rgba(0,0,0,.4);position:relative;z-index:5}
+.hdr-sub{font-size:11px;color:#c8a951;margin-top:2px;letter-spacing:2px;font-weight:600;position:relative;z-index:5}
+.hdr-rule{font-size:9px;color:#5a7a5a;margin-top:5px;position:relative;z-index:5}
 .cd{text-align:center;padding:12px;background:#163d25;border-bottom:1px solid #2d5a3f}
 .cd-label{font-size:9px;color:#5a7a5a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
 .cd-time{display:flex;justify-content:center;gap:14px}
@@ -155,7 +155,7 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 .cd-unit{font-size:8px}
 .tabs{max-width:900px;margin:0 auto}
 .tab{font-size:13px;padding:12px 8px}
-.status{padding:8px 40px;font-size:12px}
+.status{padding:8px 40px;font-size:12px;max-width:900px;margin:0 auto;border-radius:0 0 6px 6px}
 .board{padding:8px 40px;max-width:1000px;margin:0 auto}
 .tc{margin-bottom:10px}
 .th2{padding:12px 16px}
@@ -177,6 +177,20 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 .tip-hs{width:50px;height:50px}
 .footer{font-size:14px;padding:22px;letter-spacing:4px}
 .grass-bed{background-attachment:scroll,fixed}
+.azalea{transform-origin:bottom center}
+.grass-bed>.azalea{width:110px!important;opacity:1!important}
+.hdr>.azalea{width:120px!important}
+.ground-flowers>.azalea{width:110px!important}
+}
+@media(min-width:1024px){
+.grass-bed>.azalea{width:140px!important}
+.hdr>.azalea{width:150px!important}
+.ground-flowers>.azalea{width:130px!important}
+}
+@media(min-width:1400px){
+.grass-bed>.azalea{width:160px!important}
+.hdr>.azalea{width:170px!important}
+.ground-flowers>.azalea{width:150px!important}
 }
 </style>
 </head>
@@ -230,11 +244,11 @@ var PICKS={
   Calvini:["Scottie Scheffler","Patrick Reed","Brooks Koepka","",""],
   Logan:["Ludvig \u00c5berg","Jason Day","Cameron Smith","",""],
   Horse:["Xander Schauffele","Min Woo Lee","Russell Henley","",""],
-  Arthur:["Bryson DeChambeau","Shane Lowry","","",""],
-  PJ:["Matt Fitzpatrick","Robert MacIntyre","","",""],
-  Kong:["Collin Morikawa","Justin Rose","","",""],
-  Hamm:["Jon Rahm","Tommy Fleetwood","","",""],
-  Conor:["Rory McIlroy","Cameron Young","","",""],
+  Arthur:["Bryson DeChambeau","Shane Lowry","Viktor Hovland","",""],
+  PJ:["Matt Fitzpatrick","Robert MacIntyre","Corey Conners","",""],
+  Kong:["Collin Morikawa","Justin Rose","Hideki Matsuyama","",""],
+  Hamm:["Jon Rahm","Tommy Fleetwood","Jordan Spieth","Si Woo Kim",""],
+  Conor:["Rory McIlroy","Cameron Young","J.J. Spaun","Chris Gotterup",""],
 };
 var DAILY={thu:"",fri:"",sat:"",sun:""};
 var HEADSHOTS={
@@ -256,14 +270,28 @@ var HEADSHOTS={
 "Patrick Reed":{id:"6798",hs:"https://a.espncdn.com/i/headshots/golf/players/full/6798.png"},
 "Brooks Koepka":{id:"10046",hs:"https://a.espncdn.com/i/headshots/golf/players/full/10046.png"},
 "Cameron Smith":{id:"9780",hs:"https://a.espncdn.com/i/headshots/golf/players/full/9780.png"},
-"Russell Henley":{id:"5409",hs:"https://a.espncdn.com/i/headshots/golf/players/full/5409.png"}
+"Russell Henley":{id:"5409",hs:"https://a.espncdn.com/i/headshots/golf/players/full/5409.png"},
+"Viktor Hovland":{id:"4364873",hs:"https://a.espncdn.com/i/headshots/golf/players/full/4364873.png"},
+"Corey Conners":{id:"9126",hs:"https://a.espncdn.com/i/headshots/golf/players/full/9126.png"},
+"Hideki Matsuyama":{id:"5860",hs:"https://a.espncdn.com/i/headshots/golf/players/full/5860.png"},
+"Jordan Spieth":{id:"5467",hs:"https://a.espncdn.com/i/headshots/golf/players/full/5467.png"},
+"Si Woo Kim":{id:"7081",hs:"https://a.espncdn.com/i/headshots/golf/players/full/7081.png"},
+"J.J. Spaun":{id:"10166",hs:"https://a.espncdn.com/i/headshots/golf/players/full/10166.png"},
+"Chris Gotterup":{id:"4690755",hs:"https://a.espncdn.com/i/headshots/golf/players/full/4690755.png"}
 };
 var ODDS={
 "Scottie Scheffler":"+500","Ludvig \u00c5berg":"+1400","Xander Schauffele":"+1600",
 "Bryson DeChambeau":"+1000","Matt Fitzpatrick":"+2000","Collin Morikawa":"+2500",
 "Jon Rahm":"+850","Rory McIlroy":"+1200","Cameron Young":"+2000",
 "Tommy Fleetwood":"+2200","Justin Rose":"+3500","Robert MacIntyre":"+5000",
-"Shane Lowry":"+4000","Min Woo Lee":"+8000","Jason Day":"+10000","Patrick Reed":"+15000","Brooks Koepka":"+4000","Cameron Smith":"+5000","Russell Henley":"+6000"
+"Shane Lowry":"+4000","Min Woo Lee":"+8000","Jason Day":"+10000","Patrick Reed":"+15000","Brooks Koepka":"+4000","Cameron Smith":"+5000","Russell Henley":"+6000",
+"Viktor Hovland":"+4500",
+"Corey Conners":"+7800",
+"Hideki Matsuyama":"+2700",
+"Jordan Spieth":"+4200",
+"Si Woo Kim":"+4900",
+"J.J. Spaun":"+7200",
+"Chris Gotterup":"+4200"
 };
 var sc={},ath={},prevRank={},hbh={},ddist={},sbd={thu:{},fri:{},sat:{},sun:{}};
 // Augusta hole positions for SVG map (x,y out of 100)
@@ -778,8 +806,10 @@ function addAzaleas(){
   var hdr=document.querySelector('.hdr');
   if(hdr){hdr.style.position='relative';hdr.style.overflow='visible';
     hdr.insertAdjacentHTML('beforeend',
-      '<div class="azalea" style="left:-10px;bottom:-12px;width:95px;opacity:1">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="right:-10px;bottom:-12px;width:90px;opacity:1;transform:scaleX(-1)">'+randAzalea()+'</div>'
+      '<div class="azalea" style="left:-15px;bottom:-12px;width:105px;opacity:1">'+randAzalea()+'</div>'+
+      '<div class="azalea" style="left:50px;bottom:-18px;width:75px;opacity:.85">'+randAzalea()+'</div>'+
+      '<div class="azalea" style="right:-15px;bottom:-12px;width:100px;opacity:1;transform:scaleX(-1)">'+randAzalea()+'</div>'+
+      '<div class="azalea" style="right:50px;bottom:-18px;width:70px;opacity:.85;transform:scaleX(-1)">'+randAzalea()+'</div>'
     );
   }
   // LEADERBOARD: Grass bed with flowers growing from ground
@@ -796,24 +826,32 @@ function addAzaleas(){
       grassSvg+='<path d="M'+gx+',60 Q'+(gx+gbend)+','+(60-gh*0.6)+' '+(gx+gbend*1.5)+','+(60-gh)+'" fill="none" stroke="'+ggreen+'" stroke-width="'+gw+'" stroke-linecap="round" opacity="'+(0.5+Math.random()*0.5)+'"/>';
     }
     grassSvg+='</svg>';
-    board.insertAdjacentHTML('beforeend',
-      '<div class="azalea" style="right:-28px;top:10px;width:62px;transform:rotate(-9deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="right:-32px;top:43px;width:72px;transform:rotate(4deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-33px;top:71px;width:75px;transform:rotate(6deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-38px;top:103px;width:63px;transform:rotate(-15deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-37px;top:144px;width:61px;transform:rotate(1deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-30px;top:184px;width:65px;transform:rotate(-12deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="right:-33px;top:221px;width:70px;transform:rotate(-9deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-26px;top:248px;width:57px;transform:rotate(12deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="right:-34px;top:280px;width:72px;transform:rotate(-13deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-39px;top:311px;width:60px;transform:rotate(12deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-37px;top:362px;width:64px;transform:rotate(11deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-32px;top:412px;width:64px;transform:rotate(5deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-33px;top:462px;width:51px;transform:rotate(11deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-31px;top:542px;width:65px;transform:rotate(-3deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-42px;top:612px;width:57px;transform:rotate(-15deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="left:-30px;top:739px;width:60px;transform:rotate(5deg)">'+randAzalea()+'</div>'+
-      '<div class="azalea" style="right:-42px;top:879px;width:58px;transform:rotate(-12deg)">'+randAzalea()+'</div>'+
+    // Build azalea vine along both sides - dense, overlapping, lush
+    var az='';
+    // RIGHT side - staggered clusters every ~55px
+    for(var ri=0;ri<18;ri++){
+      var ry=10+ri*55+Math.floor(Math.random()*15);
+      var roff=-20-Math.floor(Math.random()*20);
+      var rw=75+Math.floor(Math.random()*25);
+      var rrot=-15+Math.floor(Math.random()*30);
+      az+='<div class="azalea" style="right:'+roff+'px;top:'+ry+'px;width:'+rw+'px;transform:rotate('+rrot+'deg)">'+randAzalea()+'</div>';
+      // Second depth layer offset behind
+      if(ri%2===0){
+        az+='<div class="azalea" style="right:'+(roff-15)+'px;top:'+(ry+20)+'px;width:'+(rw-10)+'px;opacity:.7;transform:rotate('+(rrot+10)+'deg)">'+randAzalea()+'</div>';
+      }
+    }
+    // LEFT side - staggered clusters every ~55px
+    for(var li=0;li<18;li++){
+      var ly=20+li*55+Math.floor(Math.random()*15);
+      var loff=-20-Math.floor(Math.random()*20);
+      var lw=75+Math.floor(Math.random()*25);
+      var lrot=-15+Math.floor(Math.random()*30);
+      az+='<div class="azalea" style="left:'+loff+'px;top:'+ly+'px;width:'+lw+'px;transform:rotate('+lrot+'deg)">'+randAzalea()+'</div>';
+      if(li%2===1){
+        az+='<div class="azalea" style="left:'+(loff-15)+'px;top:'+(ly+20)+'px;width:'+(lw-10)+'px;opacity:.7;transform:rotate('+(lrot-10)+'deg)">'+randAzalea()+'</div>';
+      }
+    }
+    board.insertAdjacentHTML('beforeend', az+
       '<div class="grass-blades">'+grassSvg+'</div>'+
       '<div class="ground-flowers">'+
         '<div class="azalea" style="left:-12px;bottom:0;width:95px;z-index:1">'+randAzalea()+'</div>'+
