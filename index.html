@@ -52,8 +52,6 @@ html,body{overflow-x:hidden}body{background:#0d2818;color:#fff;font-family:'Sour
 .tc{background:rgba(26,71,42,.65);border-radius:3px;margin-bottom:6px;overflow:visible;border:1px solid #2d5a3f;border-left:3px solid #2d5a3f;backdrop-filter:blur(2px)}
 .th2{display:flex;align-items:center;padding:8px 10px;background:linear-gradient(180deg,rgba(26,71,42,.75),rgba(22,61,37,.75));cursor:pointer;transition:background .2s}.th2:hover{background:linear-gradient(180deg,rgba(30,85,51,.85),rgba(26,71,42,.85));border-left:2px solid #c8a951}.th2:active{background:#1a472a}
 .tp{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#c8a951;width:26px;text-align:center}
-.tm{font-size:10px;width:24px;text-align:center;font-weight:700}
-.tm.up{color:#4caf50}.tm.dn{color:#e74c3c}.tm.eq{color:#5a7a5a}
 .tn2{font-size:15px;font-weight:700;flex:1;padding-left:6px;text-transform:uppercase;letter-spacing:.5px}
 .to{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;text-align:right;min-width:45px}
 .gl{border-top:2px solid #2d5a3f;background:rgba(0,0,0,.08)}
@@ -212,8 +210,6 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 <div id="tab-board" class="grass-bed"><div class="status" id="sbar"><span id="st">Fetching scores...</span><div style="display:flex;align-items:center"><button class="rbtn" onclick="fetchScores()">Refresh</button><button class="lbtn" onclick="document.getElementById('legend').classList.toggle('show')">?</button></div></div>
 <div class="legend" id="legend">
 <div class="leg-row"><span class="leg-icon" style="color:#c8a951">1</span><span class="leg-desc">Pool position ranking (by best 3 of 5 combined to-par)</span></div>
-<div class="leg-row"><span class="leg-icon" style="color:#4caf50">&#9650;2</span><span class="leg-desc">Moved up positions since last refresh</span></div>
-<div class="leg-row"><span class="leg-icon" style="color:#e74c3c">&#9660;1</span><span class="leg-desc">Moved down positions since last refresh</span></div>
 <div class="leg-row"><span class="leg-icon" style="color:#e74c3c">-3</span><span class="leg-desc">Score under par (red = good, Masters style)</span></div>
 <div class="leg-row"><span class="leg-icon" style="color:#4caf50">+5</span><span class="leg-desc">Score over par (green = bad, Masters style)</span></div>
 <div class="leg-row"><span class="leg-icon" style="color:#fff">E</span><span class="leg-desc">Even par</span></div>
@@ -327,7 +323,7 @@ var ODDS={
 "Maverick McNealy":"+7800",
 "Ben Griffin":"+11000"
 };
-var sc={},ath={},prevRank={},startOfDayPos=null,hbh={},ddist={},sbd={thu:{},fri:{},sat:{},sun:{}};
+var sc={},ath={},hbh={},ddist={},sbd={thu:{},fri:{},sat:{},sun:{}};
 // Augusta hole positions for SVG map (x,y out of 100)
 var HPOS=[[54,18],[54,48],[34,38],[18,37],[22,62],[26,48],[56,54],[52,24],[78,34],[80,64],[66,84],[57,89],[37,71],[72,68],[37,58],[29,53],[65,59],[79,37]];
 
@@ -393,14 +389,9 @@ function calcTeam(team){
 function renderBoard(){
   var ranked=T.map(function(t){var c=calcTeam(t);return{team:t,counting:c.counting,bench:c.bench,overall:c.overall}});
   ranked.sort(function(a,b){if(a.overall==null&&b.overall==null)return 0;if(a.overall==null)return 1;if(b.overall==null)return-1;return a.overall-b.overall});
-  // Biggest mover golfer: compare current positions to start of day
-  var newGolferRank={};
-  for(var gn in sc){if(sc[gn].toPar!=null)newGolferRank[gn]=sc[gn].toPar}
-  var allGolfersByScore=Object.keys(newGolferRank).sort(function(a,b){return newGolferRank[a]-newGolferRank[b]});
-  var newGolferPos={};allGolfersByScore.forEach(function(g,i){newGolferPos[g]=i});
-  if(!startOfDayPos&&Object.keys(newGolferPos).length>0)startOfDayPos=JSON.parse(JSON.stringify(newGolferPos));
-  var bigMoveGolfer="",bigMoveAmt=0;
-  if(startOfDayPos){for(var gn in newGolferPos){if(startOfDayPos[gn]!=null){var move=startOfDayPos[gn]-newGolferPos[gn];if(move>bigMoveAmt){bigMoveAmt=move;bigMoveGolfer=gn}}}}
+  // Biggest mover: golfer with best current round score today
+  var bigMoveGolfer="",bigMoveBest=999;
+  for(var gn in sc){var s=sc[gn];if(s.today){var tv=s.today==="E"?0:parseInt(s.today);if(!isNaN(tv)&&tv<bigMoveBest){bigMoveBest=tv;bigMoveGolfer=gn}}}
 
   var h="";
   ranked.forEach(function(r,i){
@@ -416,7 +407,7 @@ function renderBoard(){
   });
   document.getElementById("bc").innerHTML=h;
   // Biggest mover
-  if(bigMoveGolfer&&bigMoveAmt>0){var mvScore=sc[bigMoveGolfer];var mvTxt=bigMoveGolfer+" ("+ftp(mvScore.toPar)+", \u25B2"+bigMoveAmt+" spots today)";document.getElementById("mvr-n").textContent=mvTxt;document.getElementById("mvr").classList.add("show")}else{document.getElementById("mvr").classList.remove("show")}
+  if(bigMoveGolfer&&bigMoveBest<0){var mvScore=sc[bigMoveGolfer];var thruTxt=mvScore.thru?(" thru "+mvScore.thru):"";document.getElementById("mvr-n").textContent=bigMoveGolfer+" ("+ftp(bigMoveBest)+" today"+thruTxt+")";document.getElementById("mvr").classList.add("show")}else{document.getElementById("mvr").classList.remove("show")}
   // Daily winners
   document.getElementById("dw-thu").textContent=getSBW("thu","high")||DAILY.thu||"";
   document.getElementById("dw-fri").textContent=getSBW("fri","high")||DAILY.fri||"";
