@@ -118,6 +118,23 @@ html,body{overflow-x:hidden}body{background:#0d2818;color:#fff;font-family:'Sour
 .sc-tbl .sc-tot{font-weight:700;color:#c8a951;background:rgba(200,169,81,.08)}
 .mg-link{display:inline-block;margin-top:8px;font-size:10px;color:#c8a951;text-decoration:none;opacity:.6;letter-spacing:.5px;font-family:'Source Sans 3',sans-serif}
 .mg-link:hover{opacity:1;text-decoration:underline}
+/* HIGHLIGHTS */
+.hl-hdr{text-align:center;padding:14px 10px 8px;font-family:'DM Serif Display',serif;font-size:18px;color:#c8a951;letter-spacing:1px}
+.hl-sub{text-align:center;font-size:10px;color:#5a7a5a;margin-bottom:12px;font-family:'Source Sans 3',sans-serif}
+.hl-yt{margin:0 10px 14px;border-radius:8px;overflow:hidden;border:1px solid #2d5a3f}
+.hl-yt iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
+.hl-sec{font-size:11px;color:#c8a951;padding:4px 12px;letter-spacing:1px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;font-weight:600;margin-top:8px}
+.hl-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 10px 10px}
+.hl-card{background:#1a472a;border-radius:6px;border:1px solid #2d5a3f;padding:10px;cursor:pointer;transition:border-color .2s,background .2s;text-decoration:none;display:block}
+.hl-card:hover{border-color:#c8a951;background:#1e5230}
+.hl-card-top{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.hl-card-hs{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid #2d5a3f}
+.hl-card-nm{font-size:12px;font-weight:700;color:#fff;font-family:'Source Sans 3',sans-serif}
+.hl-card-det{font-size:9px;color:#8fbc8f;font-family:'IBM Plex Mono',monospace}
+.hl-card-score{font-size:10px;font-weight:600;font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.hl-empty{text-align:center;padding:30px;color:#5a7a5a;font-size:12px;font-family:'Source Sans 3',sans-serif}
+.hl-link{display:block;text-align:center;margin:10px;padding:10px;background:#1a472a;border:1px solid #2d5a3f;border-radius:6px;color:#c8a951;text-decoration:none;font-size:12px;font-family:'Source Sans 3',sans-serif;letter-spacing:.5px;transition:border-color .2s}
+.hl-link:hover{border-color:#c8a951}
 /* PROPS */
 .prop-card{background:#1a472a;border-radius:6px;margin:0 10px 10px;border:1px solid #2d5a3f;overflow:hidden}
 .prop-hdr{padding:10px 12px;background:#0a1f14;border-bottom:1px solid #c8a951}
@@ -218,7 +235,7 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 <div class="hdr-rule">Best 3 of 5 · Missed cuts card 80 for Sat & Sun</div>
 </div>
 <div class="cd" id="cd"><div class="cd-label">Round 1 Tee Off</div><div class="cd-time"><div class="cd-unit"><div class="cd-num" id="cd-d">-</div><div class="cd-txt">Days</div></div><div class="cd-unit"><div class="cd-num" id="cd-h">-</div><div class="cd-txt">Hrs</div></div><div class="cd-unit"><div class="cd-num" id="cd-m">-</div><div class="cd-txt">Min</div></div><div class="cd-unit"><div class="cd-num" id="cd-s">-</div><div class="cd-txt">Sec</div></div></div></div>
-<div class="tabs"><button class="tab active" id="btn-board" onclick="showTab('board')">Leaderboard</button><button class="tab" id="btn-map" onclick="showTab('map')">Live Map</button><button class="tab" id="btn-props" onclick="showTab('props')">Sides</button><button class="tab" id="btn-draft" onclick="showTab('draft')">Draft</button><button class="tab" id="btn-rules" onclick="showTab('rules')">Rules</button></div>
+<div class="tabs"><button class="tab active" id="btn-board" onclick="showTab('board')">Leaderboard</button><button class="tab" id="btn-map" onclick="showTab('map')">Live Map</button><button class="tab" id="btn-props" onclick="showTab('props')">Sides</button><button class="tab" id="btn-draft" onclick="showTab('draft')">Draft</button><button class="tab" id="btn-highlights" onclick="showTab('highlights')">Highlights</button><button class="tab" id="btn-rules" onclick="showTab('rules')">Rules</button></div>
 <div id="tab-board" class="grass-bed"><div class="status" id="sbar"><span id="st">Fetching scores...</span><div style="display:flex;align-items:center"><button class="rbtn" onclick="fetchScores()">Refresh</button><button class="lbtn" onclick="document.getElementById('legend').classList.toggle('show')">?</button></div></div>
 <div class="legend" id="legend">
 <div class="leg-row"><span class="leg-icon" style="color:#c8a951">1</span><span class="leg-desc">Pool position ranking (by best 3 of 5 combined to-par)</span></div>
@@ -246,6 +263,7 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
   </div>
 </div>
 <div id="tab-props" style="display:none"><div style="padding:10px 0" id="pc"></div></div>
+<div id="tab-highlights" style="display:none"><div id="hlc" style="padding:10px"></div></div>
 <div id="tab-rules" style="display:none"><div class="rules"><h3>Pool Scoring</h3><p>Each player drafts <strong>5 golfers</strong> via snake draft. Your best <strong>3 of 5</strong> combined to-par scores count. Lowest wins.</p><p>Missed cuts card <strong>80 for Saturday and Sunday</strong> (+8/round on par 72).</p><h3>Sides</h3><p><strong>Thursday:</strong> Most combined birdies/eagles. Birdies=1, Eagles=2.</p><p><strong>Friday:</strong> Most combined bogeys. Doubles=2, Triples=3.</p><p><strong>Saturday:</strong> Longest combined driving distance (individual).</p><p><strong>Sunday:</strong> Best 2 combined Amen Corner (11,12,13). Lowest wins.</p><h3>Snake Draft Order</h3><p>Calvini, Logan, Horse, Arthur, PJ, Kong, Hamm, Conor. Reverses each round.</p></div></div>
 <div class="mo" id="modal" onclick="if(event.target===this)closeModal()"><div class="md"><div class="md-h"><span class="md-t" id="m-team"></span><span class="md-o" id="m-ov"></span><button class="md-x" onclick="closeModal()">&#10005;</button></div><div class="md-b" id="m-body"></div></div></div>
 <div class="tip" id="gtip"></div>
@@ -336,11 +354,11 @@ var ODDS={
 "Maverick McNealy":"+7800",
 "Ben Griffin":"+11000"
 };
-var sc={},ath={},hbh={},ddist={},sbd={thu:{},fri:{},sat:{},sun:{}};
+var sc={},ath={},hbh={},ddist={},sbd={thu:{},fri:{},sat:{},sun:{}},mastersHL={};
 // Augusta hole positions for SVG map (x,y out of 100)
 var HPOS=[[54,18],[54,48],[34,38],[18,37],[22,62],[26,48],[56,54],[52,24],[78,34],[80,64],[66,84],[57,89],[37,71],[72,68],[37,58],[29,53],[65,59],[79,37]];
 
-function showTab(t){["board","map","draft","props","rules"].forEach(function(x){document.getElementById("tab-"+x).style.display=x===t?"":"none";document.getElementById("btn-"+x).classList.toggle("active",x===t)});if(t==="draft")renderDraft();if(t==="props")renderProps();if(t==="map")renderMap()}
+function showTab(t){["board","map","draft","props","rules","highlights"].forEach(function(x){document.getElementById("tab-"+x).style.display=x===t?"":"none";document.getElementById("btn-"+x).classList.toggle("active",x===t)});if(t==="draft")renderDraft();if(t==="props")renderProps();if(t==="map")renderMap();if(t==="highlights")renderHighlights()}
 
 // COUNTDOWN
 var TEE=new Date("2026-04-09T12:00:00Z").getTime();
@@ -529,6 +547,50 @@ function shareStandings(){
 // DRAFT
 function renderDraft(){var h='<table class="df"><thead><tr><th>Rd</th>';T.forEach(function(t){h+="<th>"+t+"</th>"});h+="</tr></thead><tbody>";SN.forEach(function(o,rd){h+="<tr><td>"+(rd+1)+"</td>";T.forEach(function(t,ti){var g=(PICKS[t]&&PICKS[t][rd])||"";var gp=rd*8+o.indexOf(ti)+1;h+="<td>"+(g||'<span class="de">#'+gp+"</span>")+"</td>"});h+="</tr>"});h+="</tbody></table>";document.getElementById("dc").innerHTML=h}
 
+// HIGHLIGHTS
+function renderHighlights(){
+  var roundNames=["Round 1","Round 2","Round 3","Round 4"];
+  var curRound=1;for(var gn in sc){var s=sc[gn];if(s.rounds.length>0)curRound=s.rounds.length+1;break}
+  if(curRound>4)curRound=4;
+  var h='<div class="hl-hdr">Highlights</div>';
+  h+='<div class="hl-sub">'+roundNames[curRound-1]+' - Drafted Golfers</div>';
+  h+='<div class="hl-yt"><iframe src="https://www.youtube.com/embed?listType=search&list=masters+2026+'+encodeURIComponent(roundNames[curRound-1].toLowerCase())+'+highlights" allowfullscreen loading="lazy"></iframe></div>';
+  h+='<a class="hl-link" href="https://www.youtube.com/results?search_query=masters+2026+'+encodeURIComponent(roundNames[curRound-1].toLowerCase())+'+highlights" target="_blank" rel="noopener">Search YouTube for '+roundNames[curRound-1]+' Highlights ↗</a>';
+  h+='<div class="hl-sec">Pool Golfer Highlights</div>';
+  var allGolfers=[];
+  T.forEach(function(t){(PICKS[t]||[]).forEach(function(g){if(g)allGolfers.push(g)})});
+  var seen={};allGolfers=allGolfers.filter(function(g){if(seen[g])return false;seen[g]=true;return true});
+  var cards=[];
+  allGolfers.forEach(function(g){
+    var ml=mastersHL[g];if(!ml)return;
+    var a=ga(g);var s=gs2(g);
+    var mid=ml.id||MASTERS_IDS[g]||"";
+    var hlId=ml.highlight||"";
+    var hlHole="",hlShot="";
+    if(hlId){var parts=hlId.split("_");if(parts.length>=5){hlHole="Hole "+parts[3];hlShot="Shot "+parts[4]}}
+    var link=mid?"https://www.masters.com/en_US/watch/player_highlights.html?id="+mid:"";
+    var tp=s?(s.toPar!=null?ftp(s.toPar):ftp(s.adj)):"--";
+    var cls=s?(s.toPar!=null?ftc(s.toPar):ftc(s.adj)):"na";
+    cards.push({name:g,hs:a.hs||"",link:link,hlHole:hlHole,hlShot:hlShot,score:tp,cls:cls,thru:ml.thru||"",hasHL:!!hlId});
+  });
+  cards.sort(function(a,b){if(a.hasHL&&!b.hasHL)return-1;if(!a.hasHL&&b.hasHL)return 1;return 0});
+  if(cards.length>0){
+    h+='<div class="hl-grid">';
+    cards.forEach(function(c){
+      h+='<a class="hl-card" '+(c.link?'href="'+c.link+'" target="_blank" rel="noopener"':'')+'>';
+      h+='<div class="hl-card-top">'+(c.hs?'<img class="hl-card-hs" src="'+c.hs+'" crossorigin="anonymous" loading="lazy" onerror="this.style.display=\'none\'">':'')+'<span class="hl-card-nm">'+c.name+'</span></div>';
+      if(c.hasHL){h+='<div class="hl-card-det">'+c.hlHole+' · '+c.hlShot+'</div>'}
+      h+='<div class="hl-card-score '+c.cls+'">'+c.score+(c.thru?' <span style="color:#5a7a5a;font-weight:400">thru '+c.thru+'</span>':'')+'</div>';
+      h+='</a>';
+    });
+    h+='</div>';
+  }else{
+    h+='<div class="hl-empty">Highlights will appear once the round is underway</div>';
+  }
+  h+='<a class="hl-link" href="https://www.masters.com/en_US/watch/highlights.html" target="_blank" rel="noopener">All Highlights on Masters.com ↗</a>';
+  document.getElementById("hlc").innerHTML=h;
+}
+
 // SIDE BETS
 var mastersFetching=false;
 function fetchMasters(){if(mastersFetching)return;mastersFetching=true;
@@ -541,7 +603,10 @@ function fetchMasters(){if(mastersFetching)return;mastersFetching=true;
   }).catch(function(){done()});
   [1,2,3,4].forEach(function(rd){fetch("https://www.masters.com/en_US/scores/feeds/2026/stats/r"+rd+"_ddist.json").then(function(r){return r.json()}).then(function(d){var ps=d.data||d.players||d;if(Array.isArray(ps))ps.forEach(function(p){var nm=p.player_name||p.name||"";if(nm&&p.avg){ddist[nm]=ddist[nm]||{};ddist[nm]["r"+rd]=parseFloat(p.avg)||0}});done()}).catch(function(){done()})});
 }
-function parseMPlayer(p){var nm=p.display_name||p.player_name||(p.first_name?p.first_name+" "+p.last_name:"")||"";if(!nm)return;hbh[nm]=hbh[nm]||{};[1,2,3,4].forEach(function(rd){var rk="r"+rd,rData=p["round"+rd]||p[rk]||null;if(rData&&rData.holes){hbh[nm][rk]=[];rData.holes.forEach(function(h){hbh[nm][rk].push(parseInt(h.strokes)||0)})}if(rData&&rData.driving_distance){ddist[nm]=ddist[nm]||{};ddist[nm][rk]=parseFloat(rData.driving_distance)||0}})}
+function parseMPlayer(p){var nm=p.full_name||p.display_name||p.player_name||(p.first_name?p.first_name+" "+p.last_name:"")||"";if(!nm)return;
+  // Store highlight data
+  if(p.last_highlight||p.id){mastersHL[nm]={id:p.id||"",highlight:p.last_highlight||"",today:p.today||"",thru:p.thru||"",pos:p.pos||""}}
+  hbh[nm]=hbh[nm]||{};[1,2,3,4].forEach(function(rd){var rk="r"+rd,rData=p["round"+rd]||p[rk]||null;if(rData&&(rData.holes||rData.scores)){var src=rData.holes||rData.scores;if(Array.isArray(src)){hbh[nm][rk]=[];src.forEach(function(h){hbh[nm][rk].push(typeof h==="object"?(parseInt(h.strokes)||0):(parseInt(h)||0))})}}if(rData&&rData.driving_distance){ddist[nm]=ddist[nm]||{};ddist[nm][rk]=parseFloat(rData.driving_distance)||0}})}
 function fHBH(n,r){if(hbh[n]&&hbh[n][r])return hbh[n][r];var lo=n.toLowerCase();for(var k in hbh)if(k.toLowerCase()===lo&&hbh[k][r])return hbh[k][r];return null}
 function fDD(n,r){if(ddist[n]&&ddist[n][r])return ddist[n][r];var lo=n.toLowerCase();for(var k in ddist)if(k.toLowerCase()===lo&&ddist[k][r])return ddist[k][r];return 0}
 
