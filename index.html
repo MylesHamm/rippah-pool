@@ -373,7 +373,7 @@ function fetchScores(){
       sc={};ps.forEach(function(p){
         var n=p.athlete&&p.athlete.displayName;if(!n)return;
         var allLS=p.linescores||[];
-        var rds=allLS.filter(function(x){return parseInt(x.value)>=60}).map(function(x){return parseInt(x.value)});
+        var rds=allLS.filter(function(x){return x.linescores&&x.linescores.length===18&&parseInt(x.value)>=60}).map(function(x){return parseInt(x.value)});
         var scoreStr=typeof p.score==="string"?p.score.trim():String(p.score||"");
         var tp=scoreStr==="E"?0:parseInt(scoreStr);
         var cut=((p.status&&p.status.type&&p.status.type.name)==="STATUS_CUT")||((p.status&&p.status.type&&p.status.type.description||"").toLowerCase()==="cut");
@@ -410,7 +410,7 @@ function getSBW(key,mode){var data=sbd[key]||{},entries=[];T.forEach(function(t)
 function estimateCutDanger(name){var s=gs2(name);if(!s||s.cut)return false;if(s.rounds.length<2)return false;var tp=s.toPar!=null?s.toPar:s.adj;return tp!=null&&tp>=3}// rough: +3 or worse after R2 is danger
 
 function calcTeam(team){
-  var golfers=[];(PICKS[team]||[]).forEach(function(g){if(!g)return;var s=gs2(g);var adj=s?s.adj:null;var tp=s?(s.toPar!=null?s.toPar:null):null;golfers.push({name:g,adj:adj,toPar:tp,eff:adj!=null?adj:(tp!=null?tp:null),cut:s?s.cut:false,rounds:s?s.rounds:[],today:s?s.today:"",thru:s?s.thru:"",hbhRds:s?s.hbhRds||[]:[]})});
+  var golfers=[];(PICKS[team]||[]).forEach(function(g){if(!g)return;var s=gs2(g);var adj=s?s.adj:null;var tp=s?(s.toPar!=null?s.toPar:null):null;golfers.push({name:g,adj:adj,toPar:tp,eff:s&&s.cut&&adj!=null?adj:(tp!=null?tp:(adj!=null?adj:null)),cut:s?s.cut:false,rounds:s?s.rounds:[],today:s?s.today:"",thru:s?s.thru:"",hbhRds:s?s.hbhRds||[]:[]})});
   var scored=golfers.filter(function(g){return g.eff!==null});var unscored=golfers.filter(function(g){return g.eff===null});
   scored.sort(function(a,b){return a.eff-b.eff});var counting=scored.slice(0,3);var bench=scored.slice(3).concat(unscored);
   var overall=counting.length>=3?counting[0].eff+counting[1].eff+counting[2].eff:null;return{counting:counting,bench:bench,overall:overall}
@@ -422,7 +422,7 @@ function renderBoard(){
   // Biggest mover: pool golfer furthest from E (best or worst)
   var bigMoveGolfer="",bigMoveBest=-1;
   var allPoolGolfers={};T.forEach(function(t){(PICKS[t]||[]).forEach(function(g){if(g)allPoolGolfers[g]=true})});
-  for(var gn in sc){if(!allPoolGolfers[gn])continue;var s=sc[gn];var eff=s.adj!=null?s.adj:(s.toPar!=null?s.toPar:null);if(eff!=null&&Math.abs(eff)>bigMoveBest){bigMoveBest=Math.abs(eff);bigMoveGolfer=gn}}
+  for(var gn in sc){if(!allPoolGolfers[gn])continue;var s=sc[gn];var eff=s.cut&&s.adj!=null?s.adj:(s.toPar!=null?s.toPar:(s.adj!=null?s.adj:null));if(eff!=null&&Math.abs(eff)>bigMoveBest){bigMoveBest=Math.abs(eff);bigMoveGolfer=gn}}
 
   var h="";
   ranked.forEach(function(r,i){
