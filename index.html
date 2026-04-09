@@ -327,7 +327,7 @@ var ODDS={
 "Maverick McNealy":"+7800",
 "Ben Griffin":"+11000"
 };
-var sc={},ath={},prevRank={},hbh={},ddist={},sbd={thu:{},fri:{},sat:{},sun:{}};
+var sc={},ath={},prevRank={},startOfDayPos=null,hbh={},ddist={},sbd={thu:{},fri:{},sat:{},sun:{}};
 // Augusta hole positions for SVG map (x,y out of 100)
 var HPOS=[[54,18],[54,48],[34,38],[18,37],[22,62],[26,48],[56,54],[52,24],[78,34],[80,64],[66,84],[57,89],[37,71],[72,68],[37,58],[29,53],[65,59],[79,37]];
 
@@ -393,22 +393,20 @@ function calcTeam(team){
 function renderBoard(){
   var ranked=T.map(function(t){var c=calcTeam(t);return{team:t,counting:c.counting,bench:c.bench,overall:c.overall}});
   ranked.sort(function(a,b){if(a.overall==null&&b.overall==null)return 0;if(a.overall==null)return 1;if(b.overall==null)return-1;return a.overall-b.overall});
-  // Biggest mover golfer: track leaderboard position changes
-  var bigMoveGolfer="",bigMoveAmt=0;
+  // Biggest mover golfer: compare current positions to start of day
   var newGolferRank={};
   for(var gn in sc){if(sc[gn].toPar!=null)newGolferRank[gn]=sc[gn].toPar}
   var allGolfersByScore=Object.keys(newGolferRank).sort(function(a,b){return newGolferRank[a]-newGolferRank[b]});
   var newGolferPos={};allGolfersByScore.forEach(function(g,i){newGolferPos[g]=i});
-  for(var gn in newGolferPos){if(prevRank[gn]!=null){var move=prevRank[gn]-newGolferPos[gn];if(move>bigMoveAmt){bigMoveAmt=move;bigMoveGolfer=gn}}}
+  if(!startOfDayPos&&Object.keys(newGolferPos).length>0)startOfDayPos=JSON.parse(JSON.stringify(newGolferPos));
+  var bigMoveGolfer="",bigMoveAmt=0;
+  if(startOfDayPos){for(var gn in newGolferPos){if(startOfDayPos[gn]!=null){var move=startOfDayPos[gn]-newGolferPos[gn];if(move>bigMoveAmt){bigMoveAmt=move;bigMoveGolfer=gn}}}}
 
-  var newRank={};ranked.forEach(function(r,i){newRank[r.team]=i});
   var h="";
   ranked.forEach(function(r,i){
     var pos=r.overall!=null?(i+1):"-";var ovTxt=r.overall!=null?ftp(r.overall):"--";var ovCls=r.overall!=null?ftc(r.overall):"na";
-    var move=0;if(newRank[r.team]!=null&&prevRank[r.team]!=null)move=prevRank[r.team]-newRank[r.team];
-    var mCls=move>0?"up":move<0?"dn":"eq";var mTxt=move>0?"\u25B2"+move:move<0?"\u25BC"+Math.abs(move):"-";
     h+='<div class="tc"><div class="th2" onclick="openModal(\''+r.team+'\')">';
-    h+='<span class="tp">'+pos+'</span><span class="tm '+mCls+'">'+mTxt+'</span>';
+    h+='<span class="tp">'+pos+'</span>';
     h+='<span class="tn2">'+r.team+'</span><span class="to '+ovCls+'">'+ovTxt+'</span></div>';
     h+='<div class="gl">';
     r.counting.forEach(function(g){h+=gRow(g,true)});
@@ -416,10 +414,9 @@ function renderBoard(){
     var total=r.counting.length+r.bench.length;for(var j=total;j<5;j++){var pk=PICKS[r.team];if(!pk||!pk[j])h+='<div class="gr2"><span class="gd"></span><span class="gn2 na" style="font-size:11px;padding-left:6px">Pick not made</span><span class="gsc na">--</span></div>'}
     h+='</div></div>';
   });
-  prevRank=Object.keys(newGolferPos).length>0?newGolferPos:prevRank;
   document.getElementById("bc").innerHTML=h;
   // Biggest mover
-  if(bigMoveGolfer&&bigMoveAmt>0){var mvScore=sc[bigMoveGolfer];var mvTxt=bigMoveGolfer+" ("+ftp(mvScore.toPar)+", \u25B2"+bigMoveAmt+" spots)";document.getElementById("mvr-n").textContent=mvTxt;document.getElementById("mvr").classList.add("show")}else{document.getElementById("mvr").classList.remove("show")}
+  if(bigMoveGolfer&&bigMoveAmt>0){var mvScore=sc[bigMoveGolfer];var mvTxt=bigMoveGolfer+" ("+ftp(mvScore.toPar)+", \u25B2"+bigMoveAmt+" spots today)";document.getElementById("mvr-n").textContent=mvTxt;document.getElementById("mvr").classList.add("show")}else{document.getElementById("mvr").classList.remove("show")}
   // Daily winners
   document.getElementById("dw-thu").textContent=getSBW("thu","high")||DAILY.thu||"";
   document.getElementById("dw-fri").textContent=getSBW("fri","high")||DAILY.fri||"";
