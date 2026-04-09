@@ -557,18 +557,19 @@ function renderHighlights(){
   var allGolfers=[];
   T.forEach(function(t){(PICKS[t]||[]).forEach(function(g){if(g)allGolfers.push(g)})});
   var seen={};allGolfers=allGolfers.filter(function(g){if(seen[g])return false;seen[g]=true;return true});
+  function getHL(n){if(mastersHL[n])return mastersHL[n];var lo=n.toLowerCase();for(var k in mastersHL)if(k.toLowerCase()===lo)return mastersHL[k];return null}
   var cards=[];
   allGolfers.forEach(function(g){
-    var ml=mastersHL[g];if(!ml)return;
+    var ml=getHL(g);
     var a=ga(g);var s=gs2(g);
-    var mid=ml.id||MASTERS_IDS[g]||"";
-    var hlId=ml.highlight||"";
+    var mid=(ml?ml.id:"")||MASTERS_IDS[g]||"";
+    var hlId=ml?ml.highlight||"":"";
     var hlHole="",hlShot="";
     if(hlId){var parts=hlId.split("_");if(parts.length>=5){hlHole="Hole "+parts[3];hlShot="Shot "+parts[4]}}
-    var link=mid?"https://www.masters.com/en_US/watch/player_highlights.html?id="+mid:"";
+    var link=mid?"https://www.masters.com/en_US/players/player_"+mid+".html?promo=minilb":"";
     var tp=s?(s.toPar!=null?ftp(s.toPar):ftp(s.adj)):"--";
     var cls=s?(s.toPar!=null?ftc(s.toPar):ftc(s.adj)):"na";
-    cards.push({name:g,hs:a.hs||"",link:link,hlHole:hlHole,hlShot:hlShot,score:tp,cls:cls,thru:ml.thru||"",hasHL:!!hlId});
+    cards.push({name:g,hs:a.hs||"",link:link,hlHole:hlHole,hlShot:hlShot,score:tp,cls:cls,thru:ml?ml.thru||"":"",hasHL:!!hlId});
   });
   cards.sort(function(a,b){if(a.hasHL&&!b.hasHL)return-1;if(!a.hasHL&&b.hasHL)return 1;return 0});
   if(cards.length>0){
