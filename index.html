@@ -603,16 +603,16 @@ function fetchMasters(){if(mastersFetching)return;mastersFetching=true;
 function parseMPlayer(p){var nm=p.full_name||p.display_name||p.player_name||(p.first_name?p.first_name+" "+p.last_name:"")||"";if(!nm)return;
   // Store highlight data
   if(p.last_highlight||p.id){mastersHL[nm]={id:p.id||"",highlight:p.last_highlight||"",today:p.today||"",thru:p.thru||"",pos:p.pos||""}}
-  hbh[nm]=hbh[nm]||{};[1,2,3,4].forEach(function(rd){var rk="r"+rd,rData=p["round"+rd]||p[rk]||null;if(rData&&(rData.holes||rData.scores)){var src=rData.holes||rData.scores;if(Array.isArray(src)){hbh[nm][rk]=[];src.forEach(function(h){hbh[nm][rk].push(typeof h==="object"?(parseInt(h.strokes)||0):(parseInt(h)||0))})}}if(rData&&rData.driving_distance){ddist[nm]=ddist[nm]||{};ddist[nm][rk]=parseFloat(rData.driving_distance)||0}})}
+  hbh[nm]=hbh[nm]||{};[1,2,3,4].forEach(function(rd){var rk="r"+rd,rData=p["round"+rd]||p[rk]||null;if(rData&&(rData.holes||rData.scores)){var src=rData.holes||rData.scores;if(Array.isArray(src)){hbh[nm][rk]=[];src.forEach(function(h){if(h===null||h===undefined){hbh[nm][rk].push(null)}else{hbh[nm][rk].push(typeof h==="object"?(parseInt(h.strokes)||0):(parseInt(h)||0))}})}}if(rData&&rData.driving_distance){ddist[nm]=ddist[nm]||{};ddist[nm][rk]=parseFloat(rData.driving_distance)||0}})}
 function fHBH(n,r){if(hbh[n]&&hbh[n][r])return hbh[n][r];var lo=n.toLowerCase();for(var k in hbh)if(k.toLowerCase()===lo&&hbh[k][r])return hbh[k][r];return null}
 function fDD(n,r){if(ddist[n]&&ddist[n][r])return ddist[n][r];var lo=n.toLowerCase();for(var k in ddist)if(k.toLowerCase()===lo&&ddist[k][r])return ddist[k][r];return 0}
 
 function calcSB(){
   sbd={thu:{},fri:{},sat:{},sun:{}};
-  T.forEach(function(t){var total=0,has=false;(PICKS[t]||[]).forEach(function(g){if(!g)return;var h=fHBH(g,"r1");if(!h)return;has=true;h.forEach(function(s,i){var d=s-HPARS[i];if(d<0)total+=Math.abs(d)})});if(has)sbd.thu[t]=total});
-  T.forEach(function(t){var total=0,has=false;(PICKS[t]||[]).forEach(function(g){if(!g)return;var h=fHBH(g,"r2");if(!h)return;has=true;h.forEach(function(s,i){var d=s-HPARS[i];if(d>0)total+=d})});if(has)sbd.fri[t]=total});
+  T.forEach(function(t){var total=0,has=false;(PICKS[t]||[]).forEach(function(g){if(!g)return;var h=fHBH(g,"r1");if(!h)return;has=true;h.forEach(function(s,i){if(s===null||s===undefined)return;var d=s-HPARS[i];if(d<0)total+=Math.abs(d)})});if(has)sbd.thu[t]=total});
+  T.forEach(function(t){var total=0,has=false;(PICKS[t]||[]).forEach(function(g){if(!g)return;var h=fHBH(g,"r2");if(!h)return;has=true;h.forEach(function(s,i){if(s===null||s===undefined)return;var d=s-HPARS[i];if(d>0)total+=d})});if(has)sbd.fri[t]=total});
   T.forEach(function(t){var best=0,bp="";(PICKS[t]||[]).forEach(function(g){if(!g)return;var d=fDD(g,"r3");if(d>best){best=d;bp=g}});if(best>0)sbd.sat[t]=best});
-  T.forEach(function(t){var as=[];(PICKS[t]||[]).forEach(function(g){if(!g)return;var h=fHBH(g,"r4");if(!h||h.length<13)return;as.push(h[10]+h[11]+h[12])});as.sort(function(a,b){return a-b});if(as.length>=2)sbd.sun[t]=as[0]+as[1]});
+  T.forEach(function(t){var as=[];(PICKS[t]||[]).forEach(function(g){if(!g)return;var h=fHBH(g,"r4");if(!h||h.length<13)return;if(h[10]!=null&&h[11]!=null&&h[12]!=null)as.push(h[10]+h[11]+h[12])});as.sort(function(a,b){return a-b});if(as.length>=2)sbd.sun[t]=as[0]+as[1]});
 }
 
 function renderProps(){
