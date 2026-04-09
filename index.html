@@ -347,12 +347,12 @@ function fetchScores(){
       var ps=(ev.competitions&&ev.competitions[0]&&ev.competitions[0].competitors)||[];
       sc={};ps.forEach(function(p){
         var n=p.athlete&&p.athlete.displayName;if(!n)return;
-        var rds=(p.linescores||[]).map(function(x){return parseInt(x.value)}).filter(function(v){return!isNaN(v)});
+        var rds=(p.linescores||[]).map(function(x){return parseInt(x.value)}).filter(function(v){return!isNaN(v)&&v>0});
         var tp=parseInt(p.score),cut=((p.status&&p.status.type&&p.status.type.name)==="STATUS_CUT")||((p.status&&p.status.type&&p.status.type.description||"").toLowerCase()==="cut");
         var adj=rds.length>0?0:null;rds.forEach(function(r){adj+=r-PAR});if(cut&&rds.length>0&&rds.length<4)adj+=(4-rds.length)*8;
         var today=p.statistics&&p.statistics[0]&&p.statistics[0].displayValue||"";
         var thru=p.status&&p.status.thru||"";
-        sc[n]={rounds:rds,toPar:isNaN(tp)?null:tp,adj:adj,cut:cut,today:today,thru:thru};
+        sc[n]={rounds:rds,toPar:(isNaN(tp)||rds.length===0)?null:tp,adj:adj,cut:cut,today:today,thru:thru};
         if(p.athlete){
           ath[n]={id:p.athlete.id||"",pos:p.status&&p.status.position&&p.status.position.displayName||"",country:p.athlete.flag&&p.athlete.flag.alt||"",hs:p.athlete.headshot&&p.athlete.headshot.href||""};
         }
