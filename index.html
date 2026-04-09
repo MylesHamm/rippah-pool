@@ -400,6 +400,7 @@ function fetchScores(){
 }
 
 function gs2(n){if(!n)return null;if(sc[n])return sc[n];var lo=n.toLowerCase();for(var k in sc)if(k.toLowerCase()===lo)return sc[k];return null}
+function getEff(s){if(!s)return null;var base=s.toPar!=null?s.toPar:null;if(base==null)return null;var pen=s.cut&&s.rounds.length>0&&s.rounds.length<4?(4-s.rounds.length)*8:0;return base+pen}
 function ga(n){if(!n)return{};var a={},src=ath[n];var lo=n.toLowerCase();if(!src){for(var k in ath)if(k.toLowerCase()===lo){src=ath[k];break}}if(src){for(var k in src)a[k]=src[k]}var hd=HEADSHOTS[n];if(!hd){for(var k in HEADSHOTS)if(k.toLowerCase()===lo){hd=HEADSHOTS[k];break}}if(hd){if(!a.hs)a.hs=hd.hs;if(!a.id)a.id=hd.id}return a}
 function ftp(v){if(v==null)return"--";if(v===0)return"E";return v>0?"+"+v:""+v}
 function ftc(v){if(v==null)return"na";return v<0?"su":v>0?"so":"se"}
@@ -410,7 +411,7 @@ function getSBW(key,mode){var data=sbd[key]||{},entries=[];T.forEach(function(t)
 function estimateCutDanger(name){var s=gs2(name);if(!s||s.cut)return false;if(s.rounds.length<2)return false;var tp=s.toPar!=null?s.toPar:s.adj;return tp!=null&&tp>=3}// rough: +3 or worse after R2 is danger
 
 function calcTeam(team){
-  var golfers=[];(PICKS[team]||[]).forEach(function(g){if(!g)return;var s=gs2(g);var adj=s?s.adj:null;var tp=s?(s.toPar!=null?s.toPar:null):null;golfers.push({name:g,adj:adj,toPar:tp,eff:s&&s.cut&&adj!=null?adj:(tp!=null?tp:(adj!=null?adj:null)),cut:s?s.cut:false,rounds:s?s.rounds:[],today:s?s.today:"",thru:s?s.thru:"",hbhRds:s?s.hbhRds||[]:[]})});
+  var golfers=[];(PICKS[team]||[]).forEach(function(g){if(!g)return;var s=gs2(g);var tp=s?(s.toPar!=null?s.toPar:null):null;var e=getEff(s);golfers.push({name:g,adj:s?s.adj:null,toPar:tp,eff:e,cut:s?s.cut:false,rounds:s?s.rounds:[],today:s?s.today:"",thru:s?s.thru:"",hbhRds:s?s.hbhRds||[]:[]})});
   var scored=golfers.filter(function(g){return g.eff!==null});var unscored=golfers.filter(function(g){return g.eff===null});
   scored.sort(function(a,b){return a.eff-b.eff});var counting=scored.slice(0,3);var bench=scored.slice(3).concat(unscored);
   var overall=counting.length>=3?counting[0].eff+counting[1].eff+counting[2].eff:null;return{counting:counting,bench:bench,overall:overall}
@@ -422,7 +423,7 @@ function renderBoard(){
   // Biggest mover: pool golfer furthest from E (best or worst)
   var bigMoveGolfer="",bigMoveBest=-1;
   var allPoolGolfers={};T.forEach(function(t){(PICKS[t]||[]).forEach(function(g){if(g)allPoolGolfers[g]=true})});
-  for(var gn in sc){if(!allPoolGolfers[gn])continue;var s=sc[gn];var eff=s.cut&&s.adj!=null?s.adj:(s.toPar!=null?s.toPar:(s.adj!=null?s.adj:null));if(eff!=null&&Math.abs(eff)>bigMoveBest){bigMoveBest=Math.abs(eff);bigMoveGolfer=gn}}
+  for(var gn in sc){if(!allPoolGolfers[gn])continue;var s=sc[gn];var eff=getEff(s);if(eff!=null&&Math.abs(eff)>bigMoveBest){bigMoveBest=Math.abs(eff);bigMoveGolfer=gn}}
 
   var h="";
   ranked.forEach(function(r,i){
@@ -438,7 +439,7 @@ function renderBoard(){
   });
   document.getElementById("bc").innerHTML=h;
   // Biggest mover
-  if(bigMoveGolfer){var mvS=sc[bigMoveGolfer];var mvEff=mvS.adj!=null?mvS.adj:(mvS.toPar!=null?mvS.toPar:0);var thruTxt=mvS.thru?(" thru "+mvS.thru):"";document.getElementById("mvr-n").textContent=bigMoveGolfer+" ("+ftp(mvEff)+thruTxt+")";document.getElementById("mvr").classList.add("show")}else{document.getElementById("mvr").classList.remove("show")}
+  if(bigMoveGolfer){var mvS=sc[bigMoveGolfer];var mvEff=getEff(mvS)||0;var thruTxt=mvS.thru?(" thru "+mvS.thru):"";document.getElementById("mvr-n").textContent=bigMoveGolfer+" ("+ftp(mvEff)+thruTxt+")";document.getElementById("mvr").classList.add("show")}else{document.getElementById("mvr").classList.remove("show")}
   // Daily winners
   document.getElementById("dw-thu").textContent=getSBW("thu","high")||DAILY.thu||"";
   document.getElementById("dw-fri").textContent=getSBW("fri","high")||DAILY.fri||"";
