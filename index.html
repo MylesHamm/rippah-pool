@@ -552,8 +552,7 @@ function renderHighlights(){
   if(curRound>4)curRound=4;
   var h='<div class="hl-hdr">Highlights</div>';
   h+='<div class="hl-sub">'+roundNames[curRound-1]+' - Drafted Golfers</div>';
-  h+='<a class="hl-link" style="background:#0a1f14;font-size:14px;font-weight:700;padding:14px;margin-bottom:6px" href="https://www.masters.com/en_US/watch/highlights.html" target="_blank" rel="noopener">Watch All Highlights on Masters.com ↗</a>';
-  h+='<a class="hl-link" style="margin-bottom:12px" href="https://www.youtube.com/results?search_query=masters+2026+'+encodeURIComponent(roundNames[curRound-1].toLowerCase())+'+highlights" target="_blank" rel="noopener">YouTube: '+roundNames[curRound-1]+' Highlights ↗</a>';
+  h+='<a class="hl-link" style="background:#0a1f14;font-size:14px;font-weight:700;padding:14px;margin-bottom:12px" href="https://www.masters.com/en_US/watch/highlights.html" target="_blank" rel="noopener">Watch All Highlights on Masters.com ↗</a>';
   h+='<div class="hl-sec">Your Golfers — Latest Highlights</div>';
   var allGolfers=[];
   T.forEach(function(t){(PICKS[t]||[]).forEach(function(g){if(g)allGolfers.push(g)})});
