@@ -462,20 +462,20 @@ function mGolfer(g,counting,num){
   if(g.cut&&g.rounds.length<4){for(var i=g.rounds.length;i<4;i++)rds+=" / 80"}
   var stLbl=counting?'<span class="c-lbl">Counting (#'+num+')</span>':'<span class="b-lbl">Bench</span>';
   if(g.cut)stLbl='<span style="color:#e74c3c;font-size:10px;font-weight:700">MISSED CUT</span>';
-  // Course map
+  // Course map — uses same HOLES_MAP positions as the main live map
   var thru=g.thru?parseInt(g.thru):0;var currentHole=thru>0&&thru<18?thru+1:thru>=18?18:0;
   var mapH="";
   if(currentHole>0){
-    mapH='<div class="cmap"><div class="cmap-label">On Course - Hole '+currentHole+'</div><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">';
-    // Amen Corner zone
-    mapH+='<rect x="106" y="214" width="25" height="22" rx="3" class="amen-zone"/><text x="30" y="60" fill="#c8a951" font-size="2.5" text-anchor="middle" font-family="Source Sans 3" opacity=".5">AMEN CORNER</text>';
-
-
-
-    // Draw paths between holes
-    for(var j=0;j<17;j++){mapH+='<line x1="'+HPOS[j][0]+'" y1="'+HPOS[j][1]+'" x2="'+HPOS[j+1][0]+'" y2="'+HPOS[j+1][1]+'" class="hole-path"/>'}
-    // Draw holes
-    for(var j=0;j<18;j++){var act=j+1===currentHole;mapH+='<circle cx="'+HPOS[j][0]+'" cy="'+HPOS[j][1]+'" r="'+(act?3:2)+'" class="hole-dot'+(act?" active":"")+'"/>';mapH+='<text x="'+HPOS[j][0]+'" y="'+HPOS[j][1]+'" class="hole-num'+(act?" active":"")+'">'+(j+1)+'</text>'}
+    mapH='<div class="cmap"><div class="cmap-label">On Course - Hole '+currentHole+'</div><svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">';
+    mapH+='<rect width="200" height="250" fill="rgba(0,80,30,.15)" rx="4"/>';
+    // Amen Corner label
+    mapH+='<text x="110" y="218" fill="#c8a951" font-size="4" text-anchor="middle" font-family="Source Sans 3" opacity=".5">AMEN CORNER</text>';
+    // Draw fairways and holes from HOLES_MAP
+    for(var j=0;j<HOLES_MAP.length;j++){var hm=HOLES_MAP[j];var act=hm.n===currentHole;
+      mapH+='<path d="M'+hm.tee[0]+','+hm.tee[1]+' Q'+hm.cp[0]+','+hm.cp[1]+' '+hm.grn[0]+','+hm.grn[1]+'" class="hole-path" style="stroke-width:'+(act?1.2:.4)+'"/>';
+      mapH+='<circle cx="'+hm.grn[0]+'" cy="'+hm.grn[1]+'" r="'+(act?5:3)+'" class="hole-dot'+(act?" active":"")+'"/>';
+      mapH+='<text x="'+hm.grn[0]+'" y="'+hm.grn[1]+'" class="hole-num'+(act?" active":"")+'" style="font-size:'+(act?'5':'3.5')+'px">'+hm.n+'</text>';
+    }
     mapH+='</svg></div>';
   }
   return'<div class="mg"><div class="mg-top">'+(a.hs?'<img class="mg-hs" src="'+a.hs+'" crossorigin="anonymous" loading="lazy" onerror="this.style.display=\'none\'">':'')+'<div class="mg-i"><div class="mg-nm">'+g.name+'</div>'+(a.country?'<div class="mg-meta">'+a.country+'</div>':'')+'</div><div style="text-align:right"><span class="mg-sc '+sCls+'">'+sTxt+'</span>'+(getOdds(g.name)?'<div style="font-size:7px;color:rgba(200,169,81,.25);font-family:JetBrains Mono,monospace">Pre-Tourney '+getOdds(g.name)+'</div>':'')+'</div></div><div class="mg-rds">'+rds+'</div><div class="mg-st">'+stLbl+'</div>'+mapH+'</div>';
