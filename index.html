@@ -349,7 +349,7 @@ function fetchScores(){
         var tp=scoreStr==="E"?0:parseInt(scoreStr);
         var cut=((p.status&&p.status.type&&p.status.type.name)==="STATUS_CUT")||((p.status&&p.status.type&&p.status.type.description||"").toLowerCase()==="cut");
         var adj=rds.length>0?0:null;rds.forEach(function(r){adj+=r-PAR});if(cut&&rds.length>0&&rds.length<4)adj+=(4-rds.length)*8;
-        var curRd=allLS.length>0?allLS[allLS.length-1]:null;
+        var curRd=null;for(var li=allLS.length-1;li>=0;li--){if(allLS[li].linescores&&allLS[li].linescores.length>0){curRd=allLS[li];break}}
         var holeScores=curRd&&curRd.linescores?curRd.linescores:[];
         var thru=holeScores.length>0?String(holeScores.length):"";
         var today=curRd&&curRd.displayValue?curRd.displayValue:"";
@@ -389,9 +389,10 @@ function calcTeam(team){
 function renderBoard(){
   var ranked=T.map(function(t){var c=calcTeam(t);return{team:t,counting:c.counting,bench:c.bench,overall:c.overall}});
   ranked.sort(function(a,b){if(a.overall==null&&b.overall==null)return 0;if(a.overall==null)return 1;if(b.overall==null)return-1;return a.overall-b.overall});
-  // Biggest mover: golfer with best current round score today
-  var bigMoveGolfer="",bigMoveBest=999;
-  for(var gn in sc){var s=sc[gn];if(s.today){var tv=s.today==="E"?0:parseInt(s.today);if(!isNaN(tv)&&tv<bigMoveBest){bigMoveBest=tv;bigMoveGolfer=gn}}}
+  // Biggest mover: pool golfer furthest from E (best or worst)
+  var bigMoveGolfer="",bigMoveBest=-1;
+  var allPoolGolfers={};T.forEach(function(t){(PICKS[t]||[]).forEach(function(g){if(g)allPoolGolfers[g]=true})});
+  for(var gn in sc){if(!allPoolGolfers[gn])continue;var s=sc[gn];var eff=s.adj!=null?s.adj:(s.toPar!=null?s.toPar:null);if(eff!=null&&Math.abs(eff)>bigMoveBest){bigMoveBest=Math.abs(eff);bigMoveGolfer=gn}}
 
   var h="";
   ranked.forEach(function(r,i){
@@ -407,7 +408,7 @@ function renderBoard(){
   });
   document.getElementById("bc").innerHTML=h;
   // Biggest mover
-  if(bigMoveGolfer&&bigMoveBest<0){var mvScore=sc[bigMoveGolfer];var thruTxt=mvScore.thru?(" thru "+mvScore.thru):"";document.getElementById("mvr-n").textContent=bigMoveGolfer+" ("+ftp(bigMoveBest)+" today"+thruTxt+")";document.getElementById("mvr").classList.add("show")}else{document.getElementById("mvr").classList.remove("show")}
+  if(bigMoveGolfer){var mvS=sc[bigMoveGolfer];var mvEff=mvS.adj!=null?mvS.adj:(mvS.toPar!=null?mvS.toPar:0);var thruTxt=mvS.thru?(" thru "+mvS.thru):"";document.getElementById("mvr-n").textContent=bigMoveGolfer+" ("+ftp(mvEff)+thruTxt+")";document.getElementById("mvr").classList.add("show")}else{document.getElementById("mvr").classList.remove("show")}
   // Daily winners
   document.getElementById("dw-thu").textContent=getSBW("thu","high")||DAILY.thu||"";
   document.getElementById("dw-fri").textContent=getSBW("fri","high")||DAILY.fri||"";
