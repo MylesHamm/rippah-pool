@@ -423,7 +423,7 @@ function gRow(g,counting){
   var tp=g.toPar!=null?g.toPar:g.adj;var sTxt=tp!=null?ftp(tp):"#N/A";var sCls=tp!=null?ftc(tp):"na";
   var cutLbl=g.cut?'<span class="gcut">CUT</span>':"";var warnLbl=(!g.cut&&estimateCutDanger(g.name))?'<span class="gw">CUT?</span>':"";
   var sn=g.name.replace(/'/g,"\\'");
-  var tdyTxt=g.today||"";var thruTxt=g.thru?("Thru "+g.thru):"";
+  var tdyTxt=(g.rounds.length>0)?(g.today||""):"";var thruTxt=g.thru?("Thru "+g.thru):"";
   return'<div class="'+cls+'">'+dot+hsImg+'<span class="gn2" onclick="event.stopPropagation();toggleTip(this,\''+sn+'\')"><span class="nm">'+g.name+cutLbl+warnLbl+'</span></span><span class="gtdy '+ftc(parseInt(tdyTxt))+'">'+tdyTxt+'</span><span class="gthr">'+thruTxt+'</span><span class="gsc '+sCls+'">'+sTxt+'</span></div>';
 }
 
