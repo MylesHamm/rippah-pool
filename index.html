@@ -106,6 +106,18 @@ html,body{overflow-x:hidden}body{background:#0d2818;color:#fff;font-family:'Sour
 .hole-num.active{fill:#fff;font-weight:700;font-size:4px}
 .hole-path{stroke:#2d5a3f;stroke-width:.4;fill:none}
 .amen-zone{fill:rgba(200,169,81,.06);stroke:#c8a951;stroke-width:.3;stroke-dasharray:1}
+/* SCORECARD */
+.sc-wrap{margin-top:8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.sc-tbl{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:10px;min-width:360px}
+.sc-tbl th{background:#0a1f12;color:#8fbc8f;font-weight:600;padding:3px 4px;text-align:center;border:1px solid #1a3a22;font-size:9px;letter-spacing:.3px}
+.sc-tbl td{padding:3px 4px;text-align:center;border:1px solid #1a3a22;color:#ccc;font-size:10px}
+.sc-tbl .sc-par{background:#0a1f12;color:#5a7a5a;font-size:9px}
+.sc-tbl .sc-hole{background:#0a1f12;color:#8fbc8f;font-weight:600;font-size:9px}
+.sc-tbl .sc-birdie{color:#4caf50;font-weight:700}.sc-tbl .sc-eagle{color:#c8a951;font-weight:700}.sc-tbl .sc-bogey{color:#e74c3c}.sc-tbl .sc-dbl{color:#ff6b6b;font-weight:700}
+.sc-tbl .sc-lbl{text-align:left;color:#8fbc8f;font-weight:600;font-size:9px;background:#0a1f12;white-space:nowrap}
+.sc-tbl .sc-tot{font-weight:700;color:#c8a951;background:rgba(200,169,81,.08)}
+.mg-link{display:inline-block;margin-top:8px;font-size:10px;color:#c8a951;text-decoration:none;opacity:.6;letter-spacing:.5px;font-family:'Source Sans 3',sans-serif}
+.mg-link:hover{opacity:1;text-decoration:underline}
 /* PROPS */
 .prop-card{background:#1a472a;border-radius:6px;margin:0 10px 10px;border:1px solid #2d5a3f;overflow:hidden}
 .prop-hdr{padding:10px 12px;background:#0a1f14;border-bottom:1px solid #c8a951}
@@ -353,7 +365,8 @@ function fetchScores(){
         var holeScores=curRd&&curRd.linescores?curRd.linescores:[];
         var thru=holeScores.length>0?String(holeScores.length):"";
         var today=curRd&&curRd.displayValue?curRd.displayValue:"";
-        sc[n]={rounds:rds,toPar:isNaN(tp)?null:tp,adj:adj,cut:cut,today:today,thru:thru};
+        var hbhRds=[];allLS.forEach(function(rd){if(rd.linescores&&rd.linescores.length>0){var holes=[];rd.linescores.forEach(function(h){holes.push({strokes:parseInt(h.value)||0,par:h.scoreType?parseInt(h.scoreType.displayValue)||0:0})});hbhRds.push(holes)}});
+        sc[n]={rounds:rds,toPar:isNaN(tp)?null:tp,adj:adj,cut:cut,today:today,thru:thru,hbhRds:hbhRds};
         if(p.athlete){
           ath[n]={id:p.athlete.id||"",pos:p.order?("T"+p.order):"",country:p.athlete.flag&&p.athlete.flag.alt||"",hs:p.athlete.headshot&&p.athlete.headshot.href||""};
         }
@@ -380,7 +393,7 @@ function getSBW(key,mode){var data=sbd[key]||{},entries=[];T.forEach(function(t)
 function estimateCutDanger(name){var s=gs2(name);if(!s||s.cut)return false;if(s.rounds.length<2)return false;var tp=s.toPar!=null?s.toPar:s.adj;return tp!=null&&tp>=3}// rough: +3 or worse after R2 is danger
 
 function calcTeam(team){
-  var golfers=[];(PICKS[team]||[]).forEach(function(g){if(!g)return;var s=gs2(g);var adj=s?s.adj:null;var tp=s?(s.toPar!=null?s.toPar:null):null;golfers.push({name:g,adj:adj,toPar:tp,eff:adj!=null?adj:(tp!=null?tp:null),cut:s?s.cut:false,rounds:s?s.rounds:[],today:s?s.today:"",thru:s?s.thru:""})});
+  var golfers=[];(PICKS[team]||[]).forEach(function(g){if(!g)return;var s=gs2(g);var adj=s?s.adj:null;var tp=s?(s.toPar!=null?s.toPar:null):null;golfers.push({name:g,adj:adj,toPar:tp,eff:adj!=null?adj:(tp!=null?tp:null),cut:s?s.cut:false,rounds:s?s.rounds:[],today:s?s.today:"",thru:s?s.thru:"",hbhRds:s?s.hbhRds||[]:[]})});
   var scored=golfers.filter(function(g){return g.eff!==null});var unscored=golfers.filter(function(g){return g.eff===null});
   scored.sort(function(a,b){return a.eff-b.eff});var counting=scored.slice(0,3);var bench=scored.slice(3).concat(unscored);
   var overall=counting.length>=3?counting[0].eff+counting[1].eff+counting[2].eff:null;return{counting:counting,bench:bench,overall:overall}
@@ -456,6 +469,24 @@ function openModal(team){
   for(var i=total;i<5;i++){if(!picks[i])h+='<div class="mg"><div class="mg-nm na">Pick not made</div></div>'}
   document.getElementById("m-body").innerHTML=h;document.getElementById("modal").classList.add("open");
 }
+function buildScorecard(hbhRds){
+  if(!hbhRds||hbhRds.length===0)return"";
+  var h='<div class="sc-wrap"><table class="sc-tbl">';
+  h+='<tr><th class="sc-lbl">HOLE</th>';for(var i=1;i<=9;i++)h+='<th class="sc-hole">'+i+'</th>';h+='<th class="sc-tot">OUT</th>';
+  for(var i=10;i<=18;i++)h+='<th class="sc-hole">'+i+'</th>';h+='<th class="sc-tot">IN</th><th class="sc-tot">TOT</th></tr>';
+  h+='<tr><td class="sc-lbl">PAR</td>';var outP=0,inP=0;
+  for(var i=0;i<9;i++){h+='<td class="sc-par">'+HPARS[i]+'</td>';outP+=HPARS[i]}h+='<td class="sc-par sc-tot">'+outP+'</td>';
+  for(var i=9;i<18;i++){h+='<td class="sc-par">'+HPARS[i]+'</td>';inP+=HPARS[i]}h+='<td class="sc-par sc-tot">'+inP+'</td><td class="sc-par sc-tot">'+(outP+inP)+'</td></tr>';
+  var rdNames=["R1","R2","R3","R4"];
+  hbhRds.forEach(function(rd,ri){
+    h+='<tr><td class="sc-lbl">'+rdNames[ri]+'</td>';var outS=0,inS=0,outH=0,inH=0;
+    for(var i=0;i<9;i++){if(i<rd.length){var s=rd[i].strokes;outS+=s;outH++;var d=s-HPARS[i];var cls=d<=-2?"sc-eagle":d===-1?"sc-birdie":d===1?"sc-bogey":d>=2?"sc-dbl":"";h+='<td class="'+cls+'">'+s+'</td>'}else{h+='<td style="color:#333">·</td>'}}
+    h+='<td class="sc-tot">'+(outH===9?outS:"")+'</td>';
+    for(var i=9;i<18;i++){if(i<rd.length){var s=rd[i].strokes;inS+=s;inH++;var d=s-HPARS[i];var cls=d<=-2?"sc-eagle":d===-1?"sc-birdie":d===1?"sc-bogey":d>=2?"sc-dbl":"";h+='<td class="'+cls+'">'+s+'</td>'}else{h+='<td style="color:#333">·</td>'}}
+    h+='<td class="sc-tot">'+(inH===9?inS:"")+'</td><td class="sc-tot">'+(outH+inH===18?(outS+inS):(outH>0?(outS+inS)+"*":""))+'</td></tr>';
+  });
+  h+='</table></div>';return h;
+}
 function mGolfer(g,counting,num){
   var tp=g.toPar!=null?g.toPar:g.adj;var sTxt=tp!=null?ftp(tp):"--";var sCls=tp!=null?ftc(tp):"na";
   var a=ga(g.name);var rds=g.rounds.length?g.rounds.join(" / "):"No rounds played";
@@ -478,7 +509,10 @@ function mGolfer(g,counting,num){
     }
     mapH+='</svg></div>';
   }
-  return'<div class="mg"><div class="mg-top">'+(a.hs?'<img class="mg-hs" src="'+a.hs+'" crossorigin="anonymous" loading="lazy" onerror="this.style.display=\'none\'">':'')+'<div class="mg-i"><div class="mg-nm">'+g.name+'</div>'+(a.country?'<div class="mg-meta">'+a.country+'</div>':'')+'</div><div style="text-align:right"><span class="mg-sc '+sCls+'">'+sTxt+'</span>'+(getOdds(g.name)?'<div style="font-size:7px;color:rgba(200,169,81,.25);font-family:JetBrains Mono,monospace">Pre-Tourney '+getOdds(g.name)+'</div>':'')+'</div></div><div class="mg-rds">'+rds+'</div><div class="mg-st">'+stLbl+'</div>'+mapH+'</div>';
+  var scH=buildScorecard(g.hbhRds);
+  var lastName=g.name.split(" ").pop().toLowerCase().replace(/[^a-z]/g,"");var firstName=g.name.split(" ")[0].toLowerCase().replace(/[^a-z]/g,"");
+  var mLink='<a class="mg-link" href="https://www.masters.com/en_US/players/'+firstName+'_'+lastName+'.html" target="_blank" rel="noopener">View on Masters.com ↗</a>';
+  return'<div class="mg"><div class="mg-top">'+(a.hs?'<img class="mg-hs" src="'+a.hs+'" crossorigin="anonymous" loading="lazy" onerror="this.style.display=\'none\'">':'')+'<div class="mg-i"><div class="mg-nm">'+g.name+'</div>'+(a.country?'<div class="mg-meta">'+a.country+'</div>':'')+'</div><div style="text-align:right"><span class="mg-sc '+sCls+'">'+sTxt+'</span>'+(getOdds(g.name)?'<div style="font-size:7px;color:rgba(200,169,81,.25);font-family:JetBrains Mono,monospace">Pre-Tourney '+getOdds(g.name)+'</div>':'')+'</div></div><div class="mg-rds">'+rds+'</div><div class="mg-st">'+stLbl+'</div>'+scH+mapH+'<div style="text-align:center">'+mLink+'</div></div>';
 }
 function closeModal(){document.getElementById("modal").classList.remove("open")}
 
