@@ -121,8 +121,6 @@ html,body{overflow-x:hidden}body{background:#0d2818;color:#fff;font-family:'Sour
 /* HIGHLIGHTS */
 .hl-hdr{text-align:center;padding:14px 10px 8px;font-family:'DM Serif Display',serif;font-size:18px;color:#c8a951;letter-spacing:1px}
 .hl-sub{text-align:center;font-size:10px;color:#5a7a5a;margin-bottom:12px;font-family:'Source Sans 3',sans-serif}
-.hl-yt{margin:0 10px 14px;border-radius:8px;overflow:hidden;border:1px solid #2d5a3f}
-.hl-yt iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
 .hl-sec{font-size:11px;color:#c8a951;padding:4px 12px;letter-spacing:1px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;font-weight:600;margin-top:8px}
 .hl-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 10px 10px}
 .hl-card{background:#1a472a;border-radius:6px;border:1px solid #2d5a3f;padding:10px;cursor:pointer;transition:border-color .2s,background .2s;text-decoration:none;display:block}
@@ -554,9 +552,9 @@ function renderHighlights(){
   if(curRound>4)curRound=4;
   var h='<div class="hl-hdr">Highlights</div>';
   h+='<div class="hl-sub">'+roundNames[curRound-1]+' - Drafted Golfers</div>';
-  h+='<div class="hl-yt"><iframe src="https://www.youtube.com/embed?listType=search&list=masters+2026+'+encodeURIComponent(roundNames[curRound-1].toLowerCase())+'+highlights" allowfullscreen loading="lazy"></iframe></div>';
-  h+='<a class="hl-link" href="https://www.youtube.com/results?search_query=masters+2026+'+encodeURIComponent(roundNames[curRound-1].toLowerCase())+'+highlights" target="_blank" rel="noopener">Search YouTube for '+roundNames[curRound-1]+' Highlights ↗</a>';
-  h+='<div class="hl-sec">Pool Golfer Highlights</div>';
+  h+='<a class="hl-link" style="background:#0a1f14;font-size:14px;font-weight:700;padding:14px;margin-bottom:6px" href="https://www.masters.com/en_US/watch/highlights.html" target="_blank" rel="noopener">Watch All Highlights on Masters.com ↗</a>';
+  h+='<a class="hl-link" style="margin-bottom:12px" href="https://www.youtube.com/results?search_query=masters+2026+'+encodeURIComponent(roundNames[curRound-1].toLowerCase())+'+highlights" target="_blank" rel="noopener">YouTube: '+roundNames[curRound-1]+' Highlights ↗</a>';
+  h+='<div class="hl-sec">Your Golfers — Latest Highlights</div>';
   var allGolfers=[];
   T.forEach(function(t){(PICKS[t]||[]).forEach(function(g){if(g)allGolfers.push(g)})});
   var seen={};allGolfers=allGolfers.filter(function(g){if(seen[g])return false;seen[g]=true;return true});
@@ -587,7 +585,6 @@ function renderHighlights(){
   }else{
     h+='<div class="hl-empty">Highlights will appear once the round is underway</div>';
   }
-  h+='<a class="hl-link" href="https://www.masters.com/en_US/watch/highlights.html" target="_blank" rel="noopener">All Highlights on Masters.com ↗</a>';
   document.getElementById("hlc").innerHTML=h;
 }
 
