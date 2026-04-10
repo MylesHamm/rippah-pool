@@ -594,7 +594,7 @@ function renderHighlights(){
 // SIDE BETS
 var mastersFetching=false;
 function fetchMasters(){if(mastersFetching)return;mastersFetching=true;
-  var pending=5;function done(){pending--;if(pending<=0){calcSB();renderProps();mastersFetching=false}}
+  var pending=5;function done(){pending--;if(pending<=0){calcSB();renderProps();renderBoard();mastersFetching=false}}
   fetch("https://www.masters.com/en_US/scores/feeds/2026/scores.json").then(function(r){return r.json()}).then(function(d){
     var players=d.data&&d.data.player||d.player||d.players||[];
     if(Array.isArray(players))players.forEach(function(p){parseMPlayer(p)});
@@ -607,8 +607,9 @@ function parseMPlayer(p){var nm=p.full_name||p.display_name||p.player_name||(p.f
   // Store highlight data
   if(p.last_highlight||p.id){mastersHL[nm]={id:p.id||"",highlight:p.last_highlight||"",today:p.today||"",thru:p.thru||"",pos:p.pos||""}}
   hbh[nm]=hbh[nm]||{};[1,2,3,4].forEach(function(rd){var rk="r"+rd,rData=p["round"+rd]||p[rk]||null;if(rData&&(rData.holes||rData.scores)){var src=rData.holes||rData.scores;if(Array.isArray(src)){hbh[nm][rk]=[];src.forEach(function(h){if(h===null||h===undefined){hbh[nm][rk].push(null)}else{hbh[nm][rk].push(typeof h==="object"?(parseInt(h.strokes)||0):(parseInt(h)||0))}})}}if(rData&&rData.driving_distance){ddist[nm]=ddist[nm]||{};ddist[nm][rk]=parseFloat(rData.driving_distance)||0}})}
-function fHBH(n,r){if(hbh[n]&&hbh[n][r])return hbh[n][r];var lo=n.toLowerCase();for(var k in hbh)if(k.toLowerCase()===lo&&hbh[k][r])return hbh[k][r];return null}
-function fDD(n,r){if(ddist[n]&&ddist[n][r])return ddist[n][r];var lo=n.toLowerCase();for(var k in ddist)if(k.toLowerCase()===lo&&ddist[k][r])return ddist[k][r];return 0}
+function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+function fHBH(n,r){if(hbh[n]&&hbh[n][r])return hbh[n][r];var lo=norm(n);for(var k in hbh)if(norm(k)===lo&&hbh[k][r])return hbh[k][r];var ln=n.split(" ").pop().toLowerCase();for(var k in hbh)if(k.toLowerCase().indexOf(ln)>=0&&hbh[k][r])return hbh[k][r];return null}
+function fDD(n,r){if(ddist[n]&&ddist[n][r])return ddist[n][r];var lo=norm(n);for(var k in ddist)if(norm(k)===lo&&ddist[k][r])return ddist[k][r];var ln=n.split(" ").pop().toLowerCase();for(var k in ddist)if(k.toLowerCase().indexOf(ln)>=0&&ddist[k][r])return ddist[k][r];return 0}
 
 function calcSB(){
   sbd={thu:{},fri:{},sat:{},sun:{}};
