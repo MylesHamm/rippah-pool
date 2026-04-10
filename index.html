@@ -467,7 +467,7 @@ function toggleTip(el,name){
   var s=gs2(name),a=ga(name);var h='<div class="tip-top">'+(a.hs?'<img class="tip-hs" src="'+a.hs+'" crossorigin="anonymous" onerror="this.style.display=\'none\'">':'')+'<div><div class="tip-nm">'+name+'</div>'+(a.country?'<div class="tip-ctry">'+a.country+'</div>':'')+'</div></div>';
   if(a.pos)h+='<div class="tip-r">Position: <span>'+a.pos+'</span></div>';
   var odds=getOdds(name);if(odds)h+='<div class="tip-r">Pre-Tourney Odds: <span style="color:rgba(200,169,81,.6)">'+odds+'</span></div>';
-  if(s){h+='<div class="tip-r">Score: <span>'+ftp(s.toPar!=null?s.toPar:s.adj)+'</span></div>';if(s.rounds.length)h+='<div class="tip-r">Rounds: <span>'+s.rounds.join(" / ")+'</span></div>';if(s.today)h+='<div class="tip-r">Today: <span>'+s.today+'</span></div>';if(s.thru)h+='<div class="tip-r">Thru: <span>'+s.thru+'</span></div>';if(s.cut)h+='<div class="tip-r" style="color:#e74c3c">Missed Cut</div>';
+  if(s){h+='<div class="tip-r">Score: <span>'+ftp(s.toPar!=null?s.toPar:s.adj)+'</span></div>';if(s.rounds.length){var rl=["R1","R2","R3","R4"];h+='<div class="tip-r">Rounds: <span>'+s.rounds.map(function(r,i){return rl[i]+": "+r}).join("  ")+'</span></div>';}if(s.today)h+='<div class="tip-r">Today: <span>'+s.today+'</span></div>';if(s.thru)h+='<div class="tip-r">Thru: <span>'+s.thru+'</span></div>';if(s.cut)h+='<div class="tip-r" style="color:#e74c3c">Missed Cut</div>';
     var thru=s.thru?parseInt(s.thru):0;var curHole=thru>0&&thru<18?thru+1:thru>=18?18:0;
     if(curHole>0){h+='<div style="margin-top:6px"><svg viewBox="0 0 200 250" width="280" height="350" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto">';h+='<rect width="200" height="250" fill="rgba(0,80,30,.15)" rx="4"/>';h+='<text x="110" y="218" fill="#c8a951" font-size="4" text-anchor="middle" font-family="Source Sans 3" opacity=".5">AMEN CORNER</text>';for(var j=0;j<HOLES_MAP.length;j++){var hm=HOLES_MAP[j];var act=hm.n===curHole;h+='<path d="M'+hm.tee[0]+','+hm.tee[1]+' Q'+hm.cp[0]+','+hm.cp[1]+' '+hm.grn[0]+','+hm.grn[1]+'" class="hole-path" style="stroke-width:'+(act?1.2:.4)+'"/>';h+='<circle cx="'+hm.grn[0]+'" cy="'+hm.grn[1]+'" r="'+(act?5:3)+'" class="hole-dot'+(act?" active":"")+'"/>';h+='<text x="'+hm.grn[0]+'" y="'+hm.grn[1]+'" class="hole-num'+(act?" active":"")+'" style="font-size:'+(act?'5':'3.5')+'px">'+hm.n+'</text>'}h+='</svg><div style="text-align:center;font-size:9px;color:#c8a951;margin-top:2px">Hole '+curHole+' - Par '+HPARS[curHole-1]+'</div></div>'}}
   else h+='<div class="tip-r">Tournament starts April 9</div>';
@@ -508,8 +508,8 @@ function buildScorecard(hbhRds){
 }
 function mGolfer(g,counting,num){
   var tp=g.toPar!=null?g.toPar:g.adj;var sTxt=tp!=null?ftp(tp):"--";var sCls=tp!=null?ftc(tp):"na";
-  var a=ga(g.name);var rds=g.rounds.length?g.rounds.join(" / "):"No rounds played";
-  if(g.cut&&g.rounds.length<4){for(var i=g.rounds.length;i<4;i++)rds+=" / 80"}
+  var a=ga(g.name);var rdLabels=["R1","R2","R3","R4"];var rds=g.rounds.length?g.rounds.map(function(r,i){return rdLabels[i]+": "+r}).join("  "):"";
+  if(g.cut&&g.rounds.length<4){for(var i=g.rounds.length;i<4;i++)rds+="  "+rdLabels[i]+": 80"}
   var stLbl=counting?'<span class="c-lbl">Counting (#'+num+')</span>':'<span class="b-lbl">Bench</span>';
   if(g.cut)stLbl='<span style="color:#e74c3c;font-size:10px;font-weight:700">MISSED CUT</span>';
   // Course map — uses same HOLES_MAP positions as the main live map
