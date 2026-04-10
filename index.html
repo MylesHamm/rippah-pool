@@ -622,7 +622,7 @@ function renderProps(){
   var props=[{k:"thu",t:"Thursday - Birdies/Eagles",d:"Most combined birdies/eagles from R1",m:"high"},{k:"fri",t:"Friday - Bogeys",d:"Most combined bogeys from R2",m:"high"},{k:"sat",t:"Saturday - Driving Distance",d:"Longest individual avg driving distance from R3",m:"high"},{k:"sun",t:"Sunday - Amen Corner",d:"Best 2 combined scores on 11/12/13 from R4",m:"low"}];
   var h="";props.forEach(function(p){
     var data=sbd[p.k]||{},entries=[];T.forEach(function(t){if(data[t]!=null)entries.push([t,data[t]])});
-    var winner=null;if(entries.length>0){if(p.m==="low")winner=entries.reduce(function(b,e){return e[1]<b[1]?e:b})[0];else winner=entries.reduce(function(b,e){return e[1]>b[1]?e:b})[0]}
+    var winner=DAILY[p.k]||null;if(!winner&&entries.length>0){if(p.m==="low")winner=entries.reduce(function(b,e){return e[1]<b[1]?e:b})[0];else{var best=entries.reduce(function(b,e){return e[1]>b[1]?e:b});if(best[1]>0)winner=best[0]}}
     h+='<div class="prop-card"><div class="prop-hdr"><div class="prop-title">'+p.t+'</div><div class="prop-desc">'+p.d+'</div></div>';
     if(!entries.length)h+='<div class="prop-row"><span style="color:#5a7a5a;font-style:italic;font-size:11px">Available once round completes</span></div>';
     else{var sorted=T.slice().sort(function(a,b){var va=data[a],vb=data[b];if(va==null&&vb==null)return 0;if(va==null)return 1;if(vb==null)return-1;return p.m==="low"?va-vb:vb-va});sorted.forEach(function(t){var v=data[t],iw=winner===t;h+='<div class="prop-row'+(iw?" pw":"")+'"><span>'+(iw?"\u2605 ":"")+t+'</span><span class="prop-val">'+(v!=null?v:"--")+'</span></div>'})};
