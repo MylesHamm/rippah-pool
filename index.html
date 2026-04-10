@@ -281,7 +281,7 @@ var PICKS={
   Conor:["Rory McIlroy","Cameron Young","J.J. Spaun","Chris Gotterup","Ben Griffin"],
 };
 var MASTERS_IDS={"Scottie Scheffler":"46046","Patrick Reed":"34360","Brooks Koepka":"36689","Adam Scott":"24502","Patrick Cantlay":"35450","Ludvig Åberg":"52955","Jason Day":"28089","Cameron Smith":"35891","Justin Thomas":"33448","Sergio García":"21209","Xander Schauffele":"48081","Min Woo Lee":"37378","Russell Henley":"34098","Jake Knapp":"47420","Sam Stevens":"55893","Bryson DeChambeau":"47959","Shane Lowry":"33204","Viktor Hovland":"46717","Nicolai Højgaard":"52453","Jacob Bridgeman":"60004","Matt Fitzpatrick":"40098","Robert MacIntyre":"52215","Corey Conners":"39997","Sepp Straka":"49960","Gary Woodland":"31323","Collin Morikawa":"50525","Justin Rose":"22405","Hideki Matsuyama":"32839","Akshay Bhatia":"56630","Sam Burns":"47504","Jon Rahm":"46970","Tommy Fleetwood":"30911","Jordan Spieth":"34046","Si Woo Kim":"37455","Maverick McNealy":"46442","Rory McIlroy":"28237","Cameron Young":"57366","J.J. Spaun":"39324","Chris Gotterup":"59095","Ben Griffin":"54591"};
-var DAILY={thu:"Kong",fri:"Horse",sat:"",sun:""};
+var DAILY={thu:"",fri:"",sat:"",sun:""};
 var HEADSHOTS={
 "Scottie Scheffler":{id:"9478",hs:"https://a.espncdn.com/i/headshots/golf/players/full/9478.png"},
 "Ludvig \u00c5berg":{id:"4375972",hs:"https://a.espncdn.com/i/headshots/golf/players/full/4375972.png"},
@@ -441,10 +441,10 @@ function renderBoard(){
   // Biggest mover
   if(bigMoveGolfer){var mvS=sc[bigMoveGolfer];var mvEff=getEff(mvS)||0;var thruTxt=mvS.thru?(" thru "+mvS.thru):"";document.getElementById("mvr-n").textContent=bigMoveGolfer+" ("+ftp(mvEff)+thruTxt+")";document.getElementById("mvr").classList.add("show")}else{document.getElementById("mvr").classList.remove("show")}
   // Daily winners
-  document.getElementById("dw-thu").textContent=getSBW("thu","high")||DAILY.thu||"";
-  document.getElementById("dw-fri").textContent=getSBW("fri","high")||DAILY.fri||"";
-  document.getElementById("dw-sat").textContent=getSBW("sat","high")||DAILY.sat||"";
-  document.getElementById("dw-sun").textContent=getSBW("sun","low")||DAILY.sun||"";
+  document.getElementById("dw-thu").textContent=getSBW("thu","high")||"";
+  document.getElementById("dw-fri").textContent=getSBW("fri","high")||"";
+  document.getElementById("dw-sat").textContent=getSBW("sat","high")||"";
+  document.getElementById("dw-sun").textContent=getSBW("sun","low")||"";
 }
 
 function gRow(g,counting){
@@ -622,7 +622,7 @@ function renderProps(){
   var props=[{k:"thu",t:"Thursday - Birdies/Eagles",d:"Most combined birdies/eagles from R1",m:"high"},{k:"fri",t:"Friday - Bogeys",d:"Most combined bogeys from R2",m:"high"},{k:"sat",t:"Saturday - Driving Distance",d:"Longest individual avg driving distance from R3",m:"high"},{k:"sun",t:"Sunday - Amen Corner",d:"Best 2 combined scores on 11/12/13 from R4",m:"low"}];
   var h="";props.forEach(function(p){
     var data=sbd[p.k]||{},entries=[];T.forEach(function(t){if(data[t]!=null)entries.push([t,data[t]])});
-    var winner=DAILY[p.k]||null;if(!winner&&entries.length>0){if(p.m==="low")winner=entries.reduce(function(b,e){return e[1]<b[1]?e:b})[0];else{var best=entries.reduce(function(b,e){return e[1]>b[1]?e:b});if(best[1]>0)winner=best[0]}}
+    var winner=null;if(entries.length>0){if(p.m==="low")winner=entries.reduce(function(b,e){return e[1]<b[1]?e:b})[0];else{var best=entries.reduce(function(b,e){return e[1]>b[1]?e:b});if(best[1]>0)winner=best[0]}}
     h+='<div class="prop-card"><div class="prop-hdr"><div class="prop-title">'+p.t+'</div><div class="prop-desc">'+p.d+'</div></div>';
     if(!entries.length)h+='<div class="prop-row"><span style="color:#5a7a5a;font-style:italic;font-size:11px">Available once round completes</span></div>';
     else{var sorted=T.slice().sort(function(a,b){var va=data[a],vb=data[b];if(va==null&&vb==null)return 0;if(va==null)return 1;if(vb==null)return-1;return p.m==="low"?va-vb:vb-va});sorted.forEach(function(t){var v=data[t],iw=winner===t;h+='<div class="prop-row'+(iw?" pw":"")+'"><span>'+(iw?"\u2605 ":"")+t+'</span><span class="prop-val">'+(v!=null?v:"--")+'</span></div>'})};
