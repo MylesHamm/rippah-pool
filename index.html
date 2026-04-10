@@ -580,7 +580,7 @@ function renderHighlights(){
     cards.forEach(function(c){
       h+='<a class="hl-card" '+(c.link?'href="'+c.link+'" target="_blank" rel="noopener"':'')+'>';
       h+='<div class="hl-card-top">'+(c.hs?'<img class="hl-card-hs" src="'+c.hs+'" crossorigin="anonymous" loading="lazy" onerror="this.style.display=\'none\'">':'')+'<span class="hl-card-nm">'+c.name+'</span></div>';
-      if(c.hasHL){h+='<div class="hl-card-det">'+c.hlHole+' · '+c.hlShot+'</div>'}
+      if(c.hasHL&&c.thru!=="F"&&c.thru!=="18"){h+='<div class="hl-card-det">'+c.hlHole+' · '+c.hlShot+'</div>'}
       h+='<div class="hl-card-score '+c.cls+'">'+c.score+(c.thru?' <span style="color:#5a7a5a;font-weight:400">thru '+c.thru+'</span>':'')+'</div>';
       h+='</a>';
     });
