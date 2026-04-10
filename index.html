@@ -572,7 +572,7 @@ function renderHighlights(){
     var link=mid?"https://www.masters.com/en_US/players/player_"+mid+".html?promo=minilb":"";
     var tp=s?(s.toPar!=null?ftp(s.toPar):ftp(s.adj)):"--";
     var cls=s?(s.toPar!=null?ftc(s.toPar):ftc(s.adj)):"na";
-    cards.push({name:g,hs:a.hs||"",link:link,hlHole:hlHole,hlShot:hlShot,score:tp,cls:cls,thru:ml?ml.thru||"":"",hasHL:!!hlId});
+    cards.push({name:g,hs:a.hs||"",link:link,hlHole:hlHole,hlShot:hlShot,score:tp,cls:cls,thru:(ml&&ml.thru)||(s&&s.thru)||"",hasHL:!!hlId});
   });
   cards.sort(function(a,b){if(a.hasHL&&!b.hasHL)return-1;if(!a.hasHL&&b.hasHL)return 1;return 0});
   if(cards.length>0){
