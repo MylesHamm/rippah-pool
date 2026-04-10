@@ -405,7 +405,7 @@ function ga(n){if(!n)return{};var a={},src=ath[n];var lo=n.toLowerCase();if(!src
 function ftp(v){if(v==null)return"--";if(v===0)return"E";return v>0?"+"+v:""+v}
 function ftc(v){if(v==null)return"na";return v<0?"su":v>0?"so":"se"}
 function getOdds(n){if(ODDS[n])return ODDS[n];var lo=n.toLowerCase();for(var k in ODDS)if(k.toLowerCase()===lo)return ODDS[k];return""}
-function getSBW(key,mode){var data=sbd[key]||{},entries=[];T.forEach(function(t){if(data[t]!=null)entries.push([t,data[t]])});if(!entries.length)return"";var winner;if(mode==="low")winner=entries.reduce(function(b,e){return e[1]<b[1]?e:b});else winner=entries.reduce(function(b,e){return e[1]>b[1]?e:b});return winner[0]+" ("+winner[1]+")"}
+function getSBW(key,mode){var data=sbd[key]||{},entries=[];T.forEach(function(t){if(data[t]!=null)entries.push([t,data[t]])});if(!entries.length)return"";var winner;if(mode==="low")winner=entries.reduce(function(b,e){return e[1]<b[1]?e:b});else winner=entries.reduce(function(b,e){return e[1]>b[1]?e:b});if(mode!=="low"&&winner[1]===0)return"";return winner[0]+" ("+winner[1]+")"}
 
 // CUT LINE ESTIMATION
 function estimateCutDanger(name){var s=gs2(name);if(!s||s.cut)return false;if(s.rounds.length<2)return false;var tp=s.toPar!=null?s.toPar:s.adj;return tp!=null&&tp>=3}// rough: +3 or worse after R2 is danger
