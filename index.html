@@ -563,8 +563,10 @@ function renderHighlights(){
   allGolfers.forEach(function(g){
     var ml=getHL(g);
     var a=ga(g);var s=gs2(g);
+    var hasPlayed=s&&(s.rounds.length>0||(s.thru&&parseInt(s.thru)>0));
     var mid=(ml?ml.id:"")||MASTERS_IDS[g]||"";
     var hlId=ml?ml.highlight||"":"";
+    if(!hasPlayed&&!hlId)return;
     var hlHole="",hlShot="";
     if(hlId){var parts=hlId.split("_");if(parts.length>=5){hlHole="Hole "+parts[3];hlShot="Shot "+parts[4]}}
     var link=mid?"https://www.masters.com/en_US/players/player_"+mid+".html?promo=minilb":"";
