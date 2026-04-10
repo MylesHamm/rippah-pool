@@ -513,7 +513,7 @@ function mGolfer(g,counting,num){
   var stLbl=counting?'<span class="c-lbl">Counting (#'+num+')</span>':'<span class="b-lbl">Bench</span>';
   if(g.cut)stLbl='<span style="color:#e74c3c;font-size:10px;font-weight:700">MISSED CUT</span>';
   // Course map — uses same HOLES_MAP positions as the main live map
-  var thru=g.thru?parseInt(g.thru):0;var currentHole=thru>0&&thru<18?thru+1:thru>=18?18:0;
+  var thru=g.thru?parseInt(g.thru):0;var currentHole=thru>0&&thru<18?thru+1:0;
   var mapH="";
   if(currentHole>0){
     mapH='<div class="cmap"><div class="cmap-label">On Course - Hole '+currentHole+'</div><svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">';
@@ -686,7 +686,7 @@ function getAllDraftedGolfers(){
       if(!g)return;
       var s=gs2(g);
       var thru=s&&s.thru?parseInt(s.thru):0;
-      var currentHole=thru>0&&thru<18?thru+1:thru>=18?18:0;
+      var currentHole=thru>0&&thru<18?thru+1:0;
       var lastName=g.split(" ").pop();
       all.push({name:g,last:lastName,team:team,hole:currentHole,score:s?ftp(s.toPar!=null?s.toPar:s.adj):"",cut:s?s.cut:false});
     });
