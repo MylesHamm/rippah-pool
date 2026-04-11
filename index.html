@@ -364,6 +364,8 @@ function updateCD(){var n=Date.now(),d=TEE-n;if(d<=0){document.getElementById("c
 var cdInt=setInterval(function(){updateCD();var d=new Date('2026-04-09T12:00:00Z').getTime()-Date.now();if(d<=0)clearInterval(cdInt)},1000);updateCD();
 
 // ESPN FETCH
+// HARDCODED CUT OVERRIDES - 2026 Masters cut at +4
+var CUT_PLAYERS={"Bryson DeChambeau":true,"Robert MacIntyre":true,"Min Woo Lee":true};
 function fetchScores(){
   document.getElementById("st").textContent="Fetching...";
   fetch("https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard").then(function(r){return r.json()}).then(function(d){
@@ -383,6 +385,8 @@ function fetchScores(){
         var thru=holeScores.length>0?String(holeScores.length):"";
         var today=curRd&&curRd.displayValue?curRd.displayValue:"";
         var hbhRds=[];allLS.forEach(function(rd){if(rd.linescores&&rd.linescores.length>0){var holes=[];rd.linescores.forEach(function(h){holes.push({strokes:parseInt(h.value)||0,par:h.scoreType?parseInt(h.scoreType.displayValue)||0:0})});hbhRds.push(holes)}});
+        if(CUT_PLAYERS[n])cut=true;
+        if(cut&&rds.length>0&&rds.length<4){adj=0;rds.forEach(function(r){adj+=r-PAR});adj+=(4-rds.length)*8;}
         sc[n]={rounds:rds,toPar:isNaN(tp)?null:tp,adj:adj,cut:cut,today:today,thru:thru,hbhRds:hbhRds};
         if(p.athlete){
           ath[n]={id:p.athlete.id||"",pos:p.order?("T"+p.order):"",country:p.athlete.flag&&p.athlete.flag.alt||"",hs:p.athlete.headshot&&p.athlete.headshot.href||""};
@@ -399,7 +403,10 @@ function fetchScores(){
   }).catch(function(){document.getElementById("st").textContent="ESPN unavailable";renderBoard()});
 }
 
-function gs2(n){if(!n)return null;if(sc[n])return sc[n];var lo=n.toLowerCase();for(var k in sc)if(k.toLowerCase()===lo)return sc[k];return null}
+function gs2(n){if(!n)return null;if(sc[n])return sc[n];var lo=n.toLowerCase();for(var k in sc)if(k.toLowerCase()===lo)return sc[k];
+  // Fallback for hardcoded cut players with no ESPN data
+  if(CUT_PLAYERS[n])return{rounds:[],toPar:null,adj:16,cut:true,today:"",thru:"",hbhRds:[]};
+  return null}
 function getEff(s){if(!s)return null;var base=s.toPar!=null?s.toPar:null;if(base==null)return null;var pen=s.cut&&s.rounds.length>0&&s.rounds.length<4?(4-s.rounds.length)*8:0;return base+pen}
 function ga(n){if(!n)return{};var a={},src=ath[n];var lo=n.toLowerCase();if(!src){for(var k in ath)if(k.toLowerCase()===lo){src=ath[k];break}}if(src){for(var k in src)a[k]=src[k]}var hd=HEADSHOTS[n];if(!hd){for(var k in HEADSHOTS)if(k.toLowerCase()===lo){hd=HEADSHOTS[k];break}}if(hd){if(!a.hs)a.hs=hd.hs;if(!a.id)a.id=hd.id}return a}
 function ftp(v){if(v==null)return"--";if(v===0)return"E";return v>0?"+"+v:""+v}
