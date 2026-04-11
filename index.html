@@ -364,6 +364,9 @@ function updateCD(){var n=Date.now(),d=TEE-n;if(d<=0){document.getElementById("c
 var cdInt=setInterval(function(){updateCD();var d=new Date('2026-04-09T12:00:00Z').getTime()-Date.now();if(d<=0)clearInterval(cdInt)},1000);updateCD();
 
 // ESPN FETCH
+// SATURDAY DRIVING DISTANCE - push values after R3 completes
+// Format: {"Player Name": avg_yards, ...} - measured on 2 designated holes
+var SAT_DD={};
 // HARDCODED CUT OVERRIDES - 2026 Masters cut at +4
 var CUT_PLAYERS={"Bryson DeChambeau":true,"Robert MacIntyre":true,"Min Woo Lee":true};
 function fetchScores(){
@@ -450,7 +453,7 @@ function renderBoard(){
   // Daily winners
   document.getElementById("dw-thu").textContent=getSBW("thu","high")||"";
   document.getElementById("dw-fri").textContent=getSBW("fri","high")||"";
-  document.getElementById("dw-sat").textContent=getSBW("sat","high")||"";
+  var satW=getSBW("sat","high");document.getElementById("dw-sat").textContent=satW?(satW+" yds"):"";
   document.getElementById("dw-sun").textContent=getSBW("sun","low")||"";
 }
 
@@ -616,7 +619,13 @@ function parseMPlayer(p){var nm=p.full_name||p.display_name||p.player_name||(p.f
   hbh[nm]=hbh[nm]||{};[1,2,3,4].forEach(function(rd){var rk="r"+rd,rData=p["round"+rd]||p[rk]||null;if(rData&&(rData.holes||rData.scores)){var src=rData.holes||rData.scores;if(Array.isArray(src)){hbh[nm][rk]=[];src.forEach(function(h){if(h===null||h===undefined){hbh[nm][rk].push(null)}else{hbh[nm][rk].push(typeof h==="object"?(parseInt(h.strokes)||0):(parseInt(h)||0))}})}}if(rData&&rData.driving_distance){ddist[nm]=ddist[nm]||{};ddist[nm][rk]=parseFloat(rData.driving_distance)||0}})}
 function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
 function fHBH(n,r){if(hbh[n]&&hbh[n][r])return hbh[n][r];var lo=norm(n);for(var k in hbh)if(norm(k)===lo&&hbh[k][r])return hbh[k][r];var ln=n.split(" ").pop().toLowerCase();for(var k in hbh)if(k.toLowerCase().indexOf(ln)>=0&&hbh[k][r])return hbh[k][r];return null}
-function fDD(n,r){if(ddist[n]&&ddist[n][r])return ddist[n][r];var lo=norm(n);for(var k in ddist)if(norm(k)===lo&&ddist[k][r])return ddist[k][r];var ln=n.split(" ").pop().toLowerCase();for(var k in ddist)if(k.toLowerCase().indexOf(ln)>=0&&ddist[k][r])return ddist[k][r];return 0}
+function fDD(n,r){
+  // Check hardcoded Saturday override first
+  if(r==="r3"&&Object.keys(SAT_DD).length>0){
+    if(SAT_DD[n])return SAT_DD[n];var lo=norm(n);for(var k in SAT_DD)if(norm(k)===lo)return SAT_DD[k];
+    var ln=n.split(" ").pop().toLowerCase();for(var k in SAT_DD)if(k.toLowerCase().indexOf(ln)>=0)return SAT_DD[k];
+  }
+  if(ddist[n]&&ddist[n][r])return ddist[n][r];var lo=norm(n);for(var k in ddist)if(norm(k)===lo&&ddist[k][r])return ddist[k][r];var ln=n.split(" ").pop().toLowerCase();for(var k in ddist)if(k.toLowerCase().indexOf(ln)>=0&&ddist[k][r])return ddist[k][r];return 0}
 
 function calcSB(){
   sbd={thu:{},fri:{},sat:{},sun:{}};
@@ -632,8 +641,13 @@ function renderProps(){
     var data=sbd[p.k]||{},entries=[];T.forEach(function(t){if(data[t]!=null)entries.push([t,data[t]])});
     var winner=null;if(entries.length>0){if(p.m==="low")winner=entries.reduce(function(b,e){return e[1]<b[1]?e:b})[0];else{var best=entries.reduce(function(b,e){return e[1]>b[1]?e:b});if(best[1]>0)winner=best[0]}}
     h+='<div class="prop-card"><div class="prop-hdr"><div class="prop-title">'+p.t+'</div><div class="prop-desc">'+p.d+'</div></div>';
-    if(!entries.length)h+='<div class="prop-row"><span style="color:#5a7a5a;font-style:italic;font-size:11px">Available once round completes</span></div>';
-    else{var sorted=T.slice().sort(function(a,b){var va=data[a],vb=data[b];if(va==null&&vb==null)return 0;if(va==null)return 1;if(vb==null)return-1;return p.m==="low"?va-vb:vb-va});sorted.forEach(function(t){var v=data[t],iw=winner===t;h+='<div class="prop-row'+(iw?" pw":"")+'"><span>'+(iw?"\u2605 ":"")+t+'</span><span class="prop-val">'+(v!=null?v:"--")+'</span></div>'})};
+    if(!entries.length){
+      var rdNum=p.k==="thu"?1:p.k==="fri"?2:p.k==="sat"?3:4;
+      var anyR3=false;for(var k in sc){if(sc[k].rounds&&sc[k].rounds.length>=rdNum)anyR3=true;}
+      var msg=anyR3&&p.k==="sat"?"Round in progress - stats update after completion":"Available once round completes";
+      h+='<div class="prop-row"><span style="color:#5a7a5a;font-style:italic;font-size:11px">'+msg+'</span></div>';
+    }
+    else{var sorted=T.slice().sort(function(a,b){var va=data[a],vb=data[b];if(va==null&&vb==null)return 0;if(va==null)return 1;if(vb==null)return-1;return p.m==="low"?va-vb:vb-va});sorted.forEach(function(t){var v=data[t],iw=winner===t;var vStr=v!=null?(p.k==="sat"?v+" yds":String(v)):"--";h+='<div class="prop-row'+(iw?" pw":"")+'"><span>'+(iw?"\u2605 ":"")+t+'</span><span class="prop-val">'+vStr+'</span></div>'})};
     h+='</div>';
   });
   document.getElementById("pc").innerHTML=h;
