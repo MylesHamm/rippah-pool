@@ -632,7 +632,13 @@ function calcSB(){
   T.forEach(function(t){var total=0,has=false;(PICKS[t]||[]).forEach(function(g){if(!g)return;var h=fHBH(g,"r1");if(!h)return;has=true;h.forEach(function(s,i){if(s===null||s===undefined)return;var d=s-HPARS[i];if(d<0)total+=Math.abs(d)})});if(has)sbd.thu[t]=total});
   T.forEach(function(t){var total=0,has=false;(PICKS[t]||[]).forEach(function(g){if(!g)return;var h=fHBH(g,"r2");if(!h)return;has=true;h.forEach(function(s,i){if(s===null||s===undefined)return;var d=s-HPARS[i];if(d>0)total+=d})});if(has)sbd.fri[t]=total});
   T.forEach(function(t){var best=0,bp="";(PICKS[t]||[]).forEach(function(g){if(!g)return;var d=fDD(g,"r3");if(d>best){best=d;bp=g}});if(best>0)sbd.sat[t]=best});
-  T.forEach(function(t){var as=[];(PICKS[t]||[]).forEach(function(g){if(!g)return;var h=fHBH(g,"r4");if(!h||h.length<13)return;if(h[10]!=null&&h[11]!=null&&h[12]!=null)as.push(h[10]+h[11]+h[12])});as.sort(function(a,b){return a-b});if(as.length>=2)sbd.sun[t]=as[0]+as[1]});
+  T.forEach(function(t){var as=[];(PICKS[t]||[]).forEach(function(g){if(!g)return;var h=fHBH(g,"r4");if(!h||h.length<11)return;
+    var h11=h[10]!=null?h[10]:null,h12=h[11]!=null?h[11]:null,h13=h[12]!=null?h[12]:null;
+    if(h11!=null&&h12!=null&&h13!=null)as.push(h11+h12+h13);
+    else if(h11!=null||h12!=null){var partial=0;if(h11!=null)partial+=h11;if(h12!=null)partial+=h12;if(h13!=null)partial+=h13;as.push(partial)}
+  });as.sort(function(a,b){return a-b});
+  if(as.length>=2)sbd.sun[t]=as[0]+as[1];
+  else if(as.length===1)sbd.sun[t]=as[0]});
 }
 
 function renderProps(){
@@ -644,10 +650,12 @@ function renderProps(){
     if(!entries.length){
       var rdNum=p.k==="thu"?1:p.k==="fri"?2:p.k==="sat"?3:4;
       var anyR3=false;for(var k in sc){if(sc[k].rounds&&sc[k].rounds.length>=rdNum)anyR3=true;}
-      var msg=anyR3&&p.k==="sat"?"Round in progress - stats update after completion":"Available once round completes";
+      var msg="Available once round completes";
+      if(anyR3&&p.k==="sat")msg="Round in progress - stats update after completion";
+      if(anyR3&&p.k==="sun")msg="Live - updates as golfers play Amen Corner (11/12/13)";
       h+='<div class="prop-row"><span style="color:#5a7a5a;font-style:italic;font-size:11px">'+msg+'</span></div>';
     }
-    else{var sorted=T.slice().sort(function(a,b){var va=data[a],vb=data[b];if(va==null&&vb==null)return 0;if(va==null)return 1;if(vb==null)return-1;return p.m==="low"?va-vb:vb-va});sorted.forEach(function(t){var v=data[t],iw=winner===t;var vStr=v!=null?(p.k==="sat"?v+" yds":String(v)):"--";h+='<div class="prop-row'+(iw?" pw":"")+'"><span>'+(iw?"\u2605 ":"")+t+'</span><span class="prop-val">'+vStr+'</span></div>'})};
+    else{var sorted=T.slice().sort(function(a,b){var va=data[a],vb=data[b];if(va==null&&vb==null)return 0;if(va==null)return 1;if(vb==null)return-1;return p.m==="low"?va-vb:vb-va});sorted.forEach(function(t){var v=data[t],iw=winner===t;var vStr=v!=null?(p.k==="sat"?v+" yds":p.k==="sun"?v+" strokes":String(v)):"--";h+='<div class="prop-row'+(iw?" pw":"")+'"><span>'+(iw?"\u2605 ":"")+t+'</span><span class="prop-val">'+vStr+'</span></div>'})};
     h+='</div>';
   });
   document.getElementById("pc").innerHTML=h;
