@@ -75,6 +75,7 @@ html,body{overflow-x:hidden}body{background:#0d2818;color:#fff;font-family:'Sour
 .tip-hs{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid #c8a951}
 .tip-nm{font-size:13px;font-weight:700}.tip-ctry{font-size:10px;color:#8fbc8f}
 .tip-r{font-size:11px;color:#8fbc8f;padding:1px 0}.tip-r span{color:#c8a951;font-family:'IBM Plex Mono',monospace}
+.winner-banner{display:none;text-align:center;padding:20px 16px;background:linear-gradient(180deg,#c8a951,#a8892e);margin:10px;border-radius:8px;position:relative;z-index:5}.winner-banner.show{display:block}.winner-banner h2{font-family:"DM Serif Display",serif;font-size:22px;color:#0a1f14;margin:0 0 4px;letter-spacing:2px}.winner-banner .wb-name{font-family:"DM Serif Display",serif;font-size:32px;color:#0a1f14;margin:6px 0}.winner-banner .wb-score{font-size:14px;color:rgba(10,31,20,.7);letter-spacing:1px}.winner-banner .wb-sub{font-size:11px;color:rgba(10,31,20,.5);margin-top:8px;font-style:italic}
 .dw{padding:14px;border-top:1px solid #2d5a3f;background:#0a1f14;border-radius:6px;margin:8px 10px;position:relative;z-index:3}.dw-title{font-family:'DM Serif Display',serif;font-size:16px;color:#c8a951;margin-bottom:10px}
 .dw-row{display:flex;padding:5px 0;font-size:13px;border-bottom:1px solid #1a3a2a}.dw-day{color:#5a7a5a;min-width:75px}.dw-win{font-weight:700;color:#c8a951}
 .sbtn{display:block;margin:12px auto;padding:8px 20px;background:#c8a951;position:relative;z-index:6;color:#0d2818;border:none;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1px;transition:background .2s}.sbtn:hover{background:#d4b85c}
@@ -196,6 +197,7 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 .nm{font-size:14px}
 .gsc{font-size:13px}
 .hs2{width:30px;height:30px}
+.winner-banner{display:none;text-align:center;padding:20px 16px;background:linear-gradient(180deg,#c8a951,#a8892e);margin:10px;border-radius:8px;position:relative;z-index:5}.winner-banner.show{display:block}.winner-banner h2{font-family:"DM Serif Display",serif;font-size:22px;color:#0a1f14;margin:0 0 4px;letter-spacing:2px}.winner-banner .wb-name{font-family:"DM Serif Display",serif;font-size:32px;color:#0a1f14;margin:6px 0}.winner-banner .wb-score{font-size:14px;color:rgba(10,31,20,.7);letter-spacing:1px}.winner-banner .wb-sub{font-size:11px;color:rgba(10,31,20,.5);margin-top:8px;font-style:italic}
 .dw{padding:18px 40px}
 .dw-hd{font-size:18px}
 .sbtn{font-size:14px;padding:10px 28px}
@@ -251,7 +253,7 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 <div class="leg-row"><span class="leg-icon" style="color:#c8a951;font-size:16px">&#9898;</span><span class="leg-desc">Tap golfer photo/name for detailed info</span></div>
 <div class="leg-row"><span class="leg-icon" style="color:#c8a951;font-size:10px">MAP</span><span class="leg-desc">Course map shows golfer's current hole (in player detail)</span></div>
 </div>
-<div class="board" id="bc"></div><button class="sbtn" onclick="shareStandings()">Share Standings</button><div class="dw"><div class="dw-title">Daily Winners</div><div class="dw-row"><span class="dw-day">Thursday:</span><span class="dw-win" id="dw-thu"></span></div><div class="dw-row"><span class="dw-day">Friday:</span><span class="dw-win" id="dw-fri"></span></div><div class="dw-row"><span class="dw-day">Saturday:</span><span class="dw-win" id="dw-sat"></span></div><div class="dw-row"><span class="dw-day">Sunday:</span><span class="dw-win" id="dw-sun"></span></div></div></div>
+<div class="winner-banner" id="wb"><h2>CONGRATULATIONS</h2><div class="wb-name" id="wb-name"></div><div class="wb-score" id="wb-score"></div><div class="wb-sub">2026 Rippah Masters Pool Champion</div></div><div class="board" id="bc"></div><button class="sbtn" onclick="shareStandings()">Share Standings</button><div class="dw"><div class="dw-title">Daily Winners</div><div class="dw-row"><span class="dw-day">Thursday:</span><span class="dw-win" id="dw-thu"></span></div><div class="dw-row"><span class="dw-day">Friday:</span><span class="dw-win" id="dw-fri"></span></div><div class="dw-row"><span class="dw-day">Saturday:</span><span class="dw-win" id="dw-sat"></span></div><div class="dw-row"><span class="dw-day">Sunday:</span><span class="dw-win" id="dw-sun"></span></div></div></div>
 <div id="tab-draft" style="display:none"><div class="draft-wrap" id="dc"></div></div>
 <div id="tab-map" style="display:none;background:#000;position:relative">
   <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(0,12,6,.8);border-bottom:1px solid rgba(0,255,100,.06)"><span style="color:rgba(0,255,120,.4);font-size:8px;letter-spacing:3px;font-family:JetBrains Mono,monospace;text-transform:uppercase">Live Course Tracking</span><span style="font-size:8px;color:rgba(0,255,120,.12);font-family:JetBrains Mono,monospace;letter-spacing:1px">Drafted golfers only</span></div>
@@ -454,6 +456,15 @@ function renderBoard(){
   document.getElementById("dw-thu").textContent=getSBW("thu","high")||"";
   document.getElementById("dw-fri").textContent=getSBW("fri","high")||"";
   var satW=getSBW("sat","high");document.getElementById("dw-sat").textContent=satW?(satW+" yds"):"";
+  // Winner banner when tournament is final
+  var evStatus="";try{evStatus=document.getElementById("st").textContent}catch(e){}
+  var isFinal=evStatus.indexOf("Final")>=0||evStatus.indexOf("final")>=0;
+  var allDone=true;for(var ri=0;ri<ranked.length;ri++){var rg=ranked[ri].golfers||[];for(var gi=0;gi<rg.length;gi++){if(rg[gi].name&&!rg[gi].cut&&rg[gi].rounds.length<4)allDone=false}}
+  if((isFinal||allDone)&&ranked.length>0&&ranked[0].overall!=null){
+    document.getElementById("wb").classList.add("show");
+    document.getElementById("wb-name").textContent=ranked[0].team;
+    document.getElementById("wb-score").textContent="Pool Score: "+ftp(ranked[0].overall);
+  }
   document.getElementById("dw-sun").textContent=getSBW("sun","low")||"";
 }
 
