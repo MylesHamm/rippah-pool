@@ -429,7 +429,7 @@ function ga(n){if(!n)return{};var a={},src=ath[n];var lo=n.toLowerCase();if(!src
 function ftp(v){if(v==null)return"--";if(v===0)return"E";return v>0?"+"+v:""+v}
 function ftc(v){if(v==null)return"na";return v<0?"su":v>0?"so":"se"}
 function getOdds(n){if(ODDS[n])return ODDS[n];var lo=n.toLowerCase();for(var k in ODDS)if(k.toLowerCase()===lo)return ODDS[k];return""}
-function getSBW(key,mode){var data=sbd[key]||{},entries=[];T.forEach(function(t){if(data[t]!=null)entries.push([t,data[t]])});if(!entries.length)return"";var winner;if(mode==="low")winner=entries.reduce(function(b,e){return e[1]<b[1]?e:b});else winner=entries.reduce(function(b,e){return e[1]>b[1]?e:b});if(mode!=="low"&&winner[1]===0)return"";return winner[0]+" ("+winner[1]+")"}
+function getSBW(key,mode){var data=sbd[key]||{},entries=[];T.forEach(function(t){if(data[t]!=null)entries.push([t,data[t]])});if(!entries.length)return"";var bestVal;if(mode==="low")bestVal=entries.reduce(function(b,e){return e[1]<b[1]?e:b})[1];else bestVal=entries.reduce(function(b,e){return e[1]>b[1]?e:b})[1];if(mode!=="low"&&bestVal===0)return"";var winners=[];entries.forEach(function(e){if(e[1]===bestVal)winners.push(e[0])});return winners.join(" & ")+" ("+bestVal+")"}
 
 // CUT LINE ESTIMATION
 function estimateCutDanger(name){var s=gs2(name);if(!s||s.cut)return false;if(s.rounds.length<2)return false;var tp=s.toPar!=null?s.toPar:s.adj;return tp!=null&&tp>=3}// rough: +3 or worse after R2 is danger
@@ -662,7 +662,7 @@ function renderProps(){
   var props=[{k:"thu",t:"Thursday - Birdies/Eagles",d:"Most combined birdies/eagles from R1",m:"high"},{k:"fri",t:"Friday - Bogeys",d:"Most combined bogeys from R2",m:"high"},{k:"sat",t:"Saturday - Driving Distance",d:"Longest individual avg driving distance from R3",m:"high"},{k:"sun",t:"Sunday - Amen Corner",d:"Best 2 combined scores on 11/12/13 from R4",m:"low"}];
   var h="";props.forEach(function(p){
     var data=sbd[p.k]||{},entries=[];T.forEach(function(t){if(data[t]!=null)entries.push([t,data[t]])});
-    var winner=null;if(entries.length>0){if(p.m==="low")winner=entries.reduce(function(b,e){return e[1]<b[1]?e:b})[0];else{var best=entries.reduce(function(b,e){return e[1]>b[1]?e:b});if(best[1]>0)winner=best[0]}}
+    var bestVal=null;if(entries.length>0){if(p.m==="low")bestVal=entries.reduce(function(b,e){return e[1]<b[1]?e:b})[1];else{var best=entries.reduce(function(b,e){return e[1]>b[1]?e:b});if(best[1]>0)bestVal=best[1]}}
     h+='<div class="prop-card"><div class="prop-hdr"><div class="prop-title">'+p.t+'</div><div class="prop-desc">'+p.d+'</div></div>';
     if(!entries.length){
       var rdNum=p.k==="thu"?1:p.k==="fri"?2:p.k==="sat"?3:4;
