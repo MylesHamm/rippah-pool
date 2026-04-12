@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -441,7 +441,7 @@ function calcTeam(team){
   var overall=counting.length>=3?counting[0].eff+counting[1].eff+counting[2].eff:null;return{counting:counting,bench:bench,overall:overall}
 }
 
-function renderBoard(){
+function renderBoard(){setTimeout(showWinnerBanner,500);
   var ranked=T.map(function(t){var c=calcTeam(t);return{team:t,counting:c.counting,bench:c.bench,overall:c.overall}});
   ranked.sort(function(a,b){if(a.overall==null&&b.overall==null)return 0;if(a.overall==null)return 1;if(b.overall==null)return-1;return a.overall-b.overall});
   // Biggest mover: pool golfer furthest from E (best or worst)
@@ -1121,8 +1121,10 @@ function showWinnerBanner(){
   },5000);
 }
 // Wait for scores to load then show banner
-setTimeout(showWinnerBanner,4000);
-setTimeout(showWinnerBanner,8000);
+setTimeout(showWinnerBanner,3000);
+setTimeout(showWinnerBanner,6000);
+setTimeout(showWinnerBanner,10000);
+setTimeout(showWinnerBanner,15000);
 </script>
 </body>
 </html>
