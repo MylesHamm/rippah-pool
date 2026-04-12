@@ -558,7 +558,9 @@ function closeModal(){document.getElementById("modal").classList.remove("open")}
 // SHARE
 function shareStandings(){
   var ranked=T.map(function(t){var c=calcTeam(t);return{team:t,overall:c.overall}}).sort(function(a,b){if(a.overall==null&&b.overall==null)return 0;if(a.overall==null)return 1;if(b.overall==null)return-1;return a.overall-b.overall});
-  var txt="RIPPAH 2026 Masters Pool\n";ranked.forEach(function(r,i){txt+=(i+1)+". "+r.team+" "+(r.overall!=null?ftp(r.overall):"--")+"\n"});
+  var wb=document.getElementById("wb");var isFinal=wb&&wb.classList.contains("show");
+  var txt=isFinal?"\u2b50 RIPPAH 2026 Masters Pool \u2b50\n\n\u2b50 CONGRATULATIONS "+ranked[0].team.toUpperCase()+"! \u2b50\nPool Champion with "+ftp(ranked[0].overall)+"\n\n":"RIPPAH 2026 Masters Pool\n\n";
+  ranked.forEach(function(r,i){txt+=(i+1)+". "+r.team+" "+(r.overall!=null?ftp(r.overall):"--")+"\n"});
   txt+="\nmyleshamm.github.io/rippah-pool";
   if(navigator.share){navigator.share({title:"Rippah Pool",text:txt}).catch(function(){})}
   else{navigator.clipboard.writeText(txt).then(function(){alert("Standings copied!")}).catch(function(){prompt("Copy standings:",txt)})}
