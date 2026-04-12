@@ -468,14 +468,7 @@ function renderBoard(){setTimeout(showWinnerBanner,500);
   document.getElementById("dw-thu").textContent=getSBW("thu","high")||"";
   document.getElementById("dw-fri").textContent=getSBW("fri","high")||"";
   var satW=getSBW("sat","high");document.getElementById("dw-sat").textContent=satW?(satW+" yds"):"";
-  // Winner banner ONLY when ESPN reports tournament as final
-  var evStatus="";try{evStatus=document.getElementById("st").textContent}catch(e){}
-  var isFinal=evStatus.indexOf("STATUS_FINAL")>=0;
-  if(!isFinal&&typeof tourneyStatus!=="undefined")isFinal=tourneyStatus==="STATUS_FINAL";
-  if(isFinal&&ranked.length>0&&ranked[0].overall!=null){
-    document.getElementById("wb").classList.add("show");
 
-  }else{document.getElementById("wb").classList.remove("show")}
   document.getElementById("dw-sun").textContent=getSBW("sun","low")||"";
 }
 
