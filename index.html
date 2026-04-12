@@ -75,7 +75,7 @@ html,body{overflow-x:hidden}body{background:#0d2818;color:#fff;font-family:'Sour
 .tip-hs{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid #c8a951}
 .tip-nm{font-size:13px;font-weight:700}.tip-ctry{font-size:10px;color:#8fbc8f}
 .tip-r{font-size:11px;color:#8fbc8f;padding:1px 0}.tip-r span{color:#c8a951;font-family:'IBM Plex Mono',monospace}
-.winner-banner{display:none;text-align:center;padding:20px 16px;background:linear-gradient(180deg,#c8a951,#a8892e);margin:10px;border-radius:8px;position:relative;z-index:5}.winner-banner.show{display:block}.winner-banner h2{font-family:"DM Serif Display",serif;font-size:22px;color:#0a1f14;margin:0 0 4px;letter-spacing:2px}.winner-banner .wb-name{font-family:"DM Serif Display",serif;font-size:32px;color:#0a1f14;margin:6px 0}.winner-banner .wb-score{font-size:14px;color:rgba(10,31,20,.7);letter-spacing:1px}.winner-banner .wb-sub{font-size:11px;color:rgba(10,31,20,.5);margin-top:8px;font-style:italic}
+
 .dw{padding:14px;border-top:1px solid #2d5a3f;background:#0a1f14;border-radius:6px;margin:8px 10px;position:relative;z-index:3}.dw-title{font-family:'DM Serif Display',serif;font-size:16px;color:#c8a951;margin-bottom:10px}
 .dw-row{display:flex;padding:5px 0;font-size:13px;border-bottom:1px solid #1a3a2a}.dw-day{color:#5a7a5a;min-width:75px}.dw-win{font-weight:700;color:#c8a951}
 .sbtn{display:block;margin:12px auto;padding:8px 20px;background:#c8a951;position:relative;z-index:6;color:#0d2818;border:none;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1px;transition:background .2s}.sbtn:hover{background:#d4b85c}
@@ -197,7 +197,7 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 .nm{font-size:14px}
 .gsc{font-size:13px}
 .hs2{width:30px;height:30px}
-.winner-banner{display:none;text-align:center;padding:20px 16px;background:linear-gradient(180deg,#c8a951,#a8892e);margin:10px;border-radius:8px;position:relative;z-index:5}.winner-banner.show{display:block}.winner-banner h2{font-family:"DM Serif Display",serif;font-size:22px;color:#0a1f14;margin:0 0 4px;letter-spacing:2px}.winner-banner .wb-name{font-family:"DM Serif Display",serif;font-size:32px;color:#0a1f14;margin:6px 0}.winner-banner .wb-score{font-size:14px;color:rgba(10,31,20,.7);letter-spacing:1px}.winner-banner .wb-sub{font-size:11px;color:rgba(10,31,20,.5);margin-top:8px;font-style:italic}
+
 .dw{padding:18px 40px}
 .dw-hd{font-size:18px}
 .sbtn{font-size:14px;padding:10px 28px}
@@ -225,6 +225,18 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 .hdr>.azalea{width:170px!important}
 .ground-flowers>.azalea{width:150px!important}
 }
+
+/* WINNER BANNER */
+.winner-wrap{display:none;position:relative;overflow:hidden;background:linear-gradient(135deg,#0a1f14 0%,#1a472a 40%,#0d2818 100%);border-bottom:3px solid #c8a951;padding:28px 16px 22px;text-align:center}
+.winner-wrap.show{display:block}
+.winner-jacket{font-size:48px;margin-bottom:4px;filter:drop-shadow(0 2px 8px rgba(200,169,81,.4));animation:jacketPulse 3s ease infinite}
+@keyframes jacketPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.winner-label{font-size:9px;color:#5a7a5a;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;font-family:'Source Sans 3',sans-serif}
+.winner-name{font-family:'DM Serif Display',serif;font-size:28px;color:#c8a951;letter-spacing:2px;text-shadow:0 2px 12px rgba(200,169,81,.3);margin-bottom:2px}
+.winner-score{font-family:'IBM Plex Mono',monospace;font-size:16px;color:#f2c744;margin-bottom:6px}
+.winner-sub{font-size:11px;color:#8fbc8f;font-style:italic}
+.confetti-piece{position:absolute;width:8px;height:8px;opacity:0;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(-20px) rotate(0deg)}100%{opacity:0;transform:translateY(180px) rotate(720deg)}}
 </style>
 </head>
 <body>
@@ -234,9 +246,9 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 <div class="hdr-sub">RIPPAH - 2026 Masters Pool</div>
 <div class="hdr-rule">Best 3 of 5 · Missed cuts card 80 for Sat & Sun</div>
 </div>
-<div class="cd" id="cd"><div class="cd-label">Round 1 Tee Off</div><div class="cd-time"><div class="cd-unit"><div class="cd-num" id="cd-d">-</div><div class="cd-txt">Days</div></div><div class="cd-unit"><div class="cd-num" id="cd-h">-</div><div class="cd-txt">Hrs</div></div><div class="cd-unit"><div class="cd-num" id="cd-m">-</div><div class="cd-txt">Min</div></div><div class="cd-unit"><div class="cd-num" id="cd-s">-</div><div class="cd-txt">Sec</div></div></div></div>
+<div class="winner-wrap" id="winner-banner"></div>
 <div class="tabs"><button class="tab active" id="btn-board" onclick="showTab('board')">Leaderboard</button><button class="tab" id="btn-map" onclick="showTab('map')">Live Map</button><button class="tab" id="btn-props" onclick="showTab('props')">Sides</button><button class="tab" id="btn-draft" onclick="showTab('draft')">Draft</button><button class="tab" id="btn-highlights" onclick="showTab('highlights')">Highlights</button><button class="tab" id="btn-rules" onclick="showTab('rules')">Rules</button></div>
-<div id="tab-board" class="grass-bed"><div class="status" id="sbar"><span id="st">Fetching scores...</span><span class="mvr" id="mvr"><span>Biggest mover:</span><span class="mvr-n" id="mvr-n"></span></span><div style="display:flex;align-items:center"><button class="rbtn" onclick="fetchScores()">Refresh</button><button class="lbtn" onclick="document.getElementById('legend').classList.toggle('show')">?</button></div></div>
+<div id="tab-board" class="grass-bed"><div class="status" id="sbar"><span id="st">Final Results</span><span class="mvr" id="mvr"><span>Biggest mover:</span><span class="mvr-n" id="mvr-n"></span></span><div style="display:flex;align-items:center"><button class="rbtn" onclick="fetchScores()">Refresh</button><button class="lbtn" onclick="document.getElementById('legend').classList.toggle('show')">?</button></div></div>
 <div class="legend" id="legend">
 <div class="leg-row"><span class="leg-icon" style="color:#c8a951">1</span><span class="leg-desc">Pool position ranking (by best 3 of 5 combined to-par)</span></div>
 <div class="leg-row"><span class="leg-icon" style="color:#e74c3c">-3</span><span class="leg-desc">Score under par (red = good, Masters style)</span></div>
@@ -253,7 +265,7 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 <div class="leg-row"><span class="leg-icon" style="color:#c8a951;font-size:16px">&#9898;</span><span class="leg-desc">Tap golfer photo/name for detailed info</span></div>
 <div class="leg-row"><span class="leg-icon" style="color:#c8a951;font-size:10px">MAP</span><span class="leg-desc">Course map shows golfer's current hole (in player detail)</span></div>
 </div>
-<div class="winner-banner" id="wb"><h2>CONGRATULATIONS</h2><div class="wb-name" id="wb-name"></div><div class="wb-score" id="wb-score"></div><div class="wb-sub">2026 Rippah Masters Pool Champion</div></div><div class="board" id="bc"></div><button class="sbtn" onclick="shareStandings()">Share Standings</button><div class="dw"><div class="dw-title">Daily Winners</div><div class="dw-row"><span class="dw-day">Thursday:</span><span class="dw-win" id="dw-thu"></span></div><div class="dw-row"><span class="dw-day">Friday:</span><span class="dw-win" id="dw-fri"></span></div><div class="dw-row"><span class="dw-day">Saturday:</span><span class="dw-win" id="dw-sat"></span></div><div class="dw-row"><span class="dw-day">Sunday:</span><span class="dw-win" id="dw-sun"></span></div></div></div>
+<div class="board" id="bc"></div><button class="sbtn" onclick="shareStandings()">Share Standings</button><div class="dw"><div class="dw-title">Daily Winners</div><div class="dw-row"><span class="dw-day">Thursday:</span><span class="dw-win" id="dw-thu"></span></div><div class="dw-row"><span class="dw-day">Friday:</span><span class="dw-win" id="dw-fri"></span></div><div class="dw-row"><span class="dw-day">Saturday:</span><span class="dw-win" id="dw-sat"></span></div><div class="dw-row"><span class="dw-day">Sunday:</span><span class="dw-win" id="dw-sun"></span></div></div></div>
 <div id="tab-draft" style="display:none"><div class="draft-wrap" id="dc"></div></div>
 <div id="tab-map" style="display:none;background:#000;position:relative">
   <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(0,12,6,.8);border-bottom:1px solid rgba(0,255,100,.06)"><span style="color:rgba(0,255,120,.4);font-size:8px;letter-spacing:3px;font-family:JetBrains Mono,monospace;text-transform:uppercase">Live Course Tracking</span><span style="font-size:8px;color:rgba(0,255,120,.12);font-family:JetBrains Mono,monospace;letter-spacing:1px">Drafted golfers only</span></div>
@@ -267,7 +279,7 @@ table.df td:first-child{font-weight:700;color:#c8a951;font-family:'IBM Plex Mono
 <div id="tab-rules" style="display:none"><div class="rules"><h3>Pool Scoring</h3><p>Each player drafts <strong>5 golfers</strong> via snake draft. Your best <strong>3 of 5</strong> combined to-par scores count. Lowest wins.</p><p>Missed cuts card <strong>80 for Saturday and Sunday</strong> (+8/round on par 72).</p><h3>Sides</h3><p><strong>Thursday:</strong> Most combined birdies/eagles. Birdies=1, Eagles=2.</p><p><strong>Friday:</strong> Most combined bogeys. Doubles=2, Triples=3.</p><p><strong>Saturday:</strong> Longest combined driving distance (individual).</p><p><strong>Sunday:</strong> Best 2 combined Amen Corner (11,12,13). Lowest wins.</p><h3>Snake Draft Order</h3><p>Calvini, Logan, Horse, Arthur, PJ, Kong, Hamm, Conor. Reverses each round.</p></div></div>
 <div class="mo" id="modal" onclick="if(event.target===this)closeModal()"><div class="md"><div class="md-h"><span class="md-t" id="m-team"></span><span class="md-o" id="m-ov"></span><button class="md-x" onclick="closeModal()">&#10005;</button></div><div class="md-b" id="m-body"></div></div></div>
 <div class="tip" id="gtip"></div>
-<div class="footer">A tradition unlike any other</div>
+<div class="footer">2026 Masters Pool - Final Results</div>
 <script>
 var T=["Calvini","Logan","Horse","Arthur","PJ","Kong","Hamm","Conor"];
 var SN=[[0,1,2,3,4,5,6,7],[7,6,5,4,3,2,1,0],[0,1,2,3,4,5,6,7],[7,6,5,4,3,2,1,0],[0,1,2,3,4,5,6,7]];
@@ -363,7 +375,7 @@ function showTab(t){["board","map","draft","props","rules","highlights"].forEach
 // COUNTDOWN
 var TEE=new Date("2026-04-09T12:00:00Z").getTime();
 function updateCD(){var n=Date.now(),d=TEE-n;if(d<=0){document.getElementById("cd").style.display="none";return}document.getElementById("cd-d").textContent=Math.floor(d/864e5);document.getElementById("cd-h").textContent=Math.floor(d%864e5/36e5);document.getElementById("cd-m").textContent=Math.floor(d%36e5/6e4);document.getElementById("cd-s").textContent=Math.floor(d%6e4/1e3)}
-var cdInt=setInterval(function(){updateCD();var d=new Date('2026-04-09T12:00:00Z').getTime()-Date.now();if(d<=0)clearInterval(cdInt)},1000);updateCD();
+// Countdown removed - tournament complete
 
 // ESPN FETCH
 // SATURDAY DRIVING DISTANCE - push values after R3 completes
@@ -462,8 +474,7 @@ function renderBoard(){
   if(!isFinal&&typeof tourneyStatus!=="undefined")isFinal=tourneyStatus==="STATUS_FINAL";
   if(isFinal&&ranked.length>0&&ranked[0].overall!=null){
     document.getElementById("wb").classList.add("show");
-    document.getElementById("wb-name").textContent=ranked[0].team;
-    document.getElementById("wb-score").textContent="Pool Score: "+ftp(ranked[0].overall);
+
   }else{document.getElementById("wb").classList.remove("show")}
   document.getElementById("dw-sun").textContent=getSBW("sun","low")||"";
 }
@@ -558,7 +569,7 @@ function closeModal(){document.getElementById("modal").classList.remove("open")}
 // SHARE
 function shareStandings(){
   var ranked=T.map(function(t){var c=calcTeam(t);return{team:t,overall:c.overall}}).sort(function(a,b){if(a.overall==null&&b.overall==null)return 0;if(a.overall==null)return 1;if(b.overall==null)return-1;return a.overall-b.overall});
-  var wb=document.getElementById("wb");var isFinal=wb&&wb.classList.contains("show");
+  var isFinal=false;
   var txt=isFinal?"\u2b50 RIPPAH 2026 Masters Pool \u2b50\n\n\u2b50 CONGRATULATIONS "+ranked[0].team.toUpperCase()+"! \u2b50\nPool Champion with "+ftp(ranked[0].overall)+"\n\n":"RIPPAH 2026 Masters Pool\n\n";
   ranked.forEach(function(r,i){txt+=(i+1)+". "+r.team+" "+(r.overall!=null?ftp(r.overall):"--")+"\n"});
   txt+="\nmyleshamm.github.io/rippah-pool";
@@ -1068,7 +1079,50 @@ function addAzaleas(){
 }
 addAzaleas();
 
-fetchScores();fetchMasters();setInterval(fetchScores,180000);setInterval(fetchMasters,300000);renderBoard();
+fetchScores();fetchMasters();renderBoard();
+// Tournament is over - show winner after scores load
+function showWinnerBanner(){
+  var ranked=T.map(function(t){var cc=calcTeam(t);return{team:t,overall:cc.overall}}).sort(function(a,b){if(a.overall==null&&b.overall==null)return 0;if(a.overall==null)return 1;if(b.overall==null)return-1;return a.overall-b.overall});
+  if(!ranked.length||ranked[0].overall==null)return;
+  var w=ranked[0];
+  var el=document.getElementById('winner-banner');
+  if(!el)return;
+  // Build confetti
+  var conf='';
+  var colors=['#c8a951','#f2c744','#4caf50','#8fbc8f','#fff','#e8d44d','#2d6a4f','#d4af37'];
+  for(var i=0;i<40;i++){
+    var clr=colors[Math.floor(Math.random()*colors.length)];
+    var left=Math.random()*100;
+    var delay=Math.random()*3;
+    var dur=2+Math.random()*2;
+    var sz=4+Math.random()*8;
+    var shape=Math.random()>0.5?'border-radius:50%':'border-radius:1px;transform:rotate('+Math.floor(Math.random()*360)+'deg)';
+    conf+='<div class="confetti-piece" style="left:'+left+'%;top:-10px;width:'+sz+'px;height:'+sz+'px;background:'+clr+';animation-delay:'+delay+'s;animation-duration:'+dur+'s;'+shape+'"></div>';
+  }
+  var scTxt=w.overall>0?'+'+w.overall:w.overall===0?'E':w.overall;
+  el.innerHTML=conf+
+    '<div class="winner-jacket">\ud83e\udde5</div>'+
+    '<div class="winner-label">2026 Rippah Pool Champion</div>'+
+    '<div class="winner-name">'+w.team+'</div>'+
+    '<div class="winner-score">'+scTxt+'</div>'+
+    '<div class="winner-sub">A tradition unlike any other</div>';
+  el.classList.add('show');
+  // Restart confetti every 5 seconds
+  setInterval(function(){
+    var pieces=el.querySelectorAll('.confetti-piece');
+    for(var j=0;j<pieces.length;j++){
+      var p=pieces[j];
+      p.style.animation='none';
+      p.offsetHeight;
+      p.style.animationDelay=Math.random()*3+'s';
+      p.style.animationDuration=2+Math.random()*2+'s';
+      p.style.animation='confettiFall linear forwards';
+    }
+  },5000);
+}
+// Wait for scores to load then show banner
+setTimeout(showWinnerBanner,4000);
+setTimeout(showWinnerBanner,8000);
 </script>
 </body>
 </html>
